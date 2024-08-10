@@ -2,7 +2,7 @@
   <div class="flex items-center justify-center min-h-screen bg-gray-100">
     <div class="p-8 bg-white rounded-lg shadow-md w-96">
       <h2 class="mb-4 text-2xl font-bold text-center">Login</h2>
-      <form @submit.prevent="handleLogin">
+      <form @submit.prevent="login">
         <div class="mb-4">
           <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
           <input v-model="email" id="email" type="email" required class="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
@@ -19,21 +19,18 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { login } from '../utility/axiosHelper';
-import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
 
 const email = ref('');
 const password = ref('');
-const router = useRouter();
+const authStore = useAuthStore();
 
-const handleLogin = async () => {
+const login = async () => {
   try {
-    const response = await login({ email: email.value, password: password.value });
-    localStorage.setItem('token', response.data.access_token);
-    router.push('/');
+    await authStore.login({ email: email.value, password: password.value });
   } catch (error) {
-    console.error('Login failed:', error);
-  }
+    console.error('Login failed', error);
+  } 
 };
 </script>
 

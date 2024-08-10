@@ -21,18 +21,19 @@
 import { computed } from 'vue';
 import { logout } from '../utility/axiosHelper';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
 
 const router = useRouter();
+const authStore = useAuthStore();
 
 const isLoggedIn = computed(() => !!localStorage.getItem('token'));
 
-const handleLogout = () => {
-  logout().then(() => {
-    localStorage.removeItem('token');
-    router.push('/login');
-  }).catch(error => {
+const handleLogout = async () => {
+  try {
+    await authStore.logout();
+  } catch (error) {
     console.error('Error logging out:', error);
-  });
+  }
 };
 </script>
 
