@@ -9,7 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.4.35"
+    "axios": "^1.7.3",
+    "pinia": "^2.2.1",
+    "sweetalert2": "^11.12.4",
+    "vue": "^3.4.35",
+    "vue-router": "^4.4.3",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.2",

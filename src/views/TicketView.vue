@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-100 min-h-screen">
+  <div class="min-h-screen bg-gray-100">
     <Navbar />
     <div class="container mx-auto mt-8">
       <TicketTable />
@@ -13,4 +13,5 @@ import TicketTable from '../components/TicketTable.vue';
 </script>
 
 <style scoped>
+/* Add scoped styles if needed */
 </style>
