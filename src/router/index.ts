@@ -4,6 +4,8 @@ import { getActivePinia } from 'pinia';
 import TicketView from '../views/TicketView.vue';
 import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
+import AddTicketView from '../views/AddTicketView.vue';
+import EditTicketView from '../views/EditTicketView.vue';
 
 const routes = [
   {
@@ -21,6 +23,18 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: RegisterView,
+  },
+  {
+    path: '/addticket',
+    name: 'addticket',
+    component: AddTicketView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/editticket/:ticketNumber',
+    name: 'editticket',
+    component: EditTicketView,
+    meta: { requiresAuth: true }
   },
   // Tambahkan rute lainnya di sini
 ];
