@@ -10,6 +10,8 @@ const app = createApp(App);
 
 const pinia = createPinia(); // Create pinia instance
 
+
+
 // Use the router and pinia before mounting the app
 app.use(router);
 app.use(pinia); // Add pinia to the app
