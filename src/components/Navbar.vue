@@ -23,7 +23,7 @@ import { useAuthStore } from '../stores/auth';
 
 const authStore = useAuthStore();
 
-const isLoggedIn = computed(() => !!localStorage.getItem('token'));
+const isLoggedIn = computed(()=> authStore.isAuthenticated)
 
 const handleLogout = async () => {
   try {
