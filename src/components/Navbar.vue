@@ -19,11 +19,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { logout } from '../utility/axiosHelper';
-import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 
-const router = useRouter();
 const authStore = useAuthStore();
 
 const isLoggedIn = computed(() => !!localStorage.getItem('token'));
