@@ -49,6 +49,8 @@
                   </div>
                 </th>
                 <th class="py-3 px-6 text-left">Client Name</th>
+                <th class="py-3 px-6 text-left">Assign By</th>
+                <th class="py-3 px-6 text-left">Category</th>
                 <th class="py-3 px-6 text-left cursor-pointer" @click="sortTable('status')">
                   <div class="flex items-center">
                     Status
@@ -65,6 +67,7 @@
                   </div>
                 </th>
                 <th class="py-3 px-6 text-left">Subject</th>
+                <th class="py-3 px-6 text-left">Issue</th>
                 <th class="py-3 px-6 text-left cursor-pointer" @click="sortTable('created_at')">
                   <div class="flex items-center">
                     Date
@@ -91,6 +94,8 @@
               >
                 <td class="py-4 px-6">{{ ticket.ticket_number }}</td>
                 <td class="py-4 px-6">{{ ticket.clientname }}</td>
+                <td class="py-4 px-6">{{ ticket.assign_by }}</td>
+                <td class="py-4 px-6">{{ ticket.kategori_name }}</td>
                 <td class="py-4 px-6">
                   <select
                     v-model="ticket.status"
@@ -102,11 +107,12 @@
                     <option value="closed">Closed</option>
                   </select>
                 </td>
+                <td class="py-4 px-6">{{ ticket.subject }}</td>
                 <td class="py-4 px-6">{{ ticket.issue }}</td>
                 <td class="py-4 px-6">{{ new Date(ticket.created_at).toLocaleDateString() }}</td>
                 <td class="py-4 px-6">
                   <button
-                    @click="editTicket(ticket.ticket_number)"
+                    
                     class="relative inline-block px-6 py-3 font-medium text-yellow-600 border-2 border-yellow-600 group rounded-lg bg-white hover:bg-yellow-600 hover:text-white transition duration-300"
                   >
                     <span class="relative">Edit</span>
@@ -150,7 +156,7 @@ const router = useRouter();
 const searchQuery = ref('');
 const currentPage = ref(1);
 const itemsPerPage = ref(10); // Adjust the items per page as needed
-const sortKey = ref<'ticket_number' | 'clientname' | 'status' | 'created_at'>('ticket_number');
+const sortKey = ref<'ticket_number' | 'clientname' | 'assign_by' | 'kategori_name' | 'status' | 'created_at'>('ticket_number');
 const sortOrder = ref('asc'); // asc or desc
 
 onMounted(() => {
@@ -162,7 +168,10 @@ const filteredTickets = computed(() => {
   let tickets = ticketStore.tickets.filter(ticket =>
     ticket.ticket_number.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
     ticket.clientname.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    ticket.assign_by.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    ticket.kategori_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
     ticket.status.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    ticket.subject.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
     ticket.issue.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 
@@ -195,9 +204,9 @@ const addTicket = () => {
   router.push({ name: 'addticket' });
 };
 
-const editTicket = (ticketNumber: string) => {
-  router.push({ name: 'editticket', params: { ticketNumber } });
-};
+// const editTicket = (ticketNumber: string) => {
+//   router.push({ name: 'editticket', params: { ticketNumber } });
+// };
 
 const sortTable = (key: string) => {
   if (sortKey.value === key) {
@@ -209,7 +218,7 @@ const sortTable = (key: string) => {
 };
 
 const updateTicketStatus = (ticket: any) => {
-  ticketStore.updateTicketStatus(ticket.id, ticket.status);
+  ticketStore.updateTicket(ticket.ticket_number, ticket.status);
 };
 
 // Pagination methods
