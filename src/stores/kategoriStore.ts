@@ -27,6 +27,14 @@ export const useKategoriStore = defineStore('kategori', () => {
       handleError(error);
     }
   };
+  const fetchKategori = async (id:number) => {
+    try {
+      const response = await axios.get(`/api/auth/kategoris/${id}`);
+      return response.data[0]
+    } catch (error) {
+      handleError(error);
+    }
+  };
 
   const createKategori = async (nama_kategori: string, status: string) => {
     try {
@@ -55,10 +63,10 @@ export const useKategoriStore = defineStore('kategori', () => {
     }
   };
 
-  // Return the state as refs using toRefs
   return {
     ...toRefs(state),
     fetchKategoris,
+    fetchKategori,
     createKategori,
     updateKategori,
     deleteKategori,

@@ -88,7 +88,7 @@ const ticketStore = useTicketStore();
 const kategoriStore = useKategoriStore();
 const issue = ref('');
 const subject = ref('');
-const kategori_id = ref<number | null>(null);
+const kategori_id = ref<number>();
 const attachment = ref<File | null>(null);
 
 const handleFileUpload = (event: Event) => {
@@ -103,7 +103,6 @@ const handleSubmit = async () => {
     await ticketStore.addTicket(issue.value, subject.value, kategori_id.value, attachment.value);
     issue.value = '';
     subject.value = '';
-    kategori_id.value = null;
     attachment.value = null;
   }
 };
