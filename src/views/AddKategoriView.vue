@@ -3,7 +3,7 @@
       <Navbar />
       <div class="container mx-auto mt-8">
         <div class="p-6 bg-white rounded-lg shadow-lg">
-          <h1 class="text-3xl font-bold text-gray-900 mb-4">Add Category</h1>
+          <h1 class="mb-4 text-3xl font-bold text-gray-900">Add Category</h1>
   
           <form @submit.prevent="submitForm">
             <div class="mb-4">
@@ -13,7 +13,7 @@
                 id="nama_kategori"
                 v-model="nama_kategori"
                 required
-                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg"
+                class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg"
               />
             </div>
   
@@ -23,7 +23,7 @@
                 id="status"
                 v-model="status"
                 required
-                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg"
+                class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg"
               >
                 <option value="active">Active</option>
                 <option value="nonactive">Non-Active</option>
@@ -33,16 +33,16 @@
             <div class="flex justify-end">
               <button
                 type="submit"
-                class="inline-block px-6 py-3 font-medium text-white bg-green-600 border-2 border-green-600 rounded-lg hover:bg-green-700 transition duration-300"
+                class="inline-block px-6 py-3 font-medium text-white transition duration-300 bg-green-600 border-2 border-green-600 rounded-lg hover:bg-green-700"
               >
                 Add Category
               </button>
               <router-link
-                to="{ name: 'kategoriview' }"
-                class="ml-4 inline-block px-6 py-3 font-medium text-gray-600 border-2 border-gray-300 rounded-lg hover:bg-gray-100 transition duration-300"
-              >
-                Cancel
-              </router-link>
+  :to="{ name: 'Kategori' }"
+  class="inline-block px-6 py-3 ml-4 font-medium text-gray-600 transition duration-300 border-2 border-gray-300 rounded-lg hover:bg-gray-100"
+>
+  Cancel
+</router-link>
             </div>
           </form>
         </div>

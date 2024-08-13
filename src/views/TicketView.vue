@@ -2,26 +2,34 @@
   <div class="min-h-screen bg-gray-100">
     <Navbar />
     <div class="container mx-auto mt-8">
-      <div class="p-6 bg-gray-100 min-h-screen">
-        <div class="max-w-8xl py-6 px-4 sm:px-6 lg:px-8">
-          <div class="flex justify-between items-center">
+      <div class="min-h-screen p-6 bg-gray-100">
+        <div class="px-4 py-6 max-w-8xl sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between">
             <!-- Title on the left -->
             <h1 class="text-3xl font-bold text-gray-900">
               Ticket All
             </h1>
 
-            <!-- Search input -->
-            <input
-              type="text"
-              v-model="searchQuery"
-              placeholder="Search..."
-              class="relative inline-block px-4 py-2 border-2 border-gray-300 rounded-lg"
-            />
+            <!-- Search input with button -->
+            <div class="flex">
+              <input
+                type="text"
+                v-model="searchQuery"
+                placeholder="Search..."
+                class="relative inline-block px-4 py-2 border-2 border-gray-300 rounded-l-lg"
+              />
+              <button
+                @click="performSearch"
+                class="relative inline-block px-6 py-2 font-medium text-white transition duration-300 bg-green-600 border-2 border-green-600 rounded-r-lg hover:bg-green-700"
+              >
+                Search
+              </button>
+            </div>
 
             <!-- Add button on the right -->
             <button
               @click="addTicket"
-              class="relative inline-block px-6 py-3 font-medium text-green-600 border-2 border-green-600 group rounded-lg bg-white hover:bg-green-600 hover:text-white transition duration-300"
+              class="relative inline-block px-6 py-3 font-medium text-green-600 transition duration-300 bg-white border-2 border-green-600 rounded-lg group hover:bg-green-600 hover:text-white"
             >
               <span class="relative">Add</span>
             </button>
@@ -33,12 +41,12 @@
           <table class="min-w-full bg-white border">
             <thead class="bg-gray-200">
               <tr>
-                <th class="py-3 px-6 text-left cursor-pointer" @click="sortTable('ticket_number')">
+                <th class="px-6 py-3 text-left cursor-pointer" @click="sortTable('ticket_number')">
                   <div class="flex items-center">
                     Ticket ID
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 ml-2"
+                      class="w-4 h-4 ml-2"
                       :class="sortKey === 'ticket_number' && sortOrder === 'asc' ? 'transform rotate-180' : ''"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -48,15 +56,15 @@
                     </svg>
                   </div>
                 </th>
-                <th class="py-3 px-6 text-left">Client Name</th>
-                <th class="py-3 px-6 text-left">Assign By</th>
-                <th class="py-3 px-6 text-left">Category</th>
-                <th class="py-3 px-6 text-left cursor-pointer" @click="sortTable('status')">
+                <th class="px-6 py-3 text-left">Client Name</th>
+                <th class="px-6 py-3 text-left">Assign By</th>
+                <th class="px-6 py-3 text-left">Category</th>
+                <th class="px-6 py-3 text-left cursor-pointer" @click="sortTable('status')">
                   <div class="flex items-center">
                     Status
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 ml-2"
+                      class="w-4 h-4 ml-2"
                       :class="sortKey === 'status' && sortOrder === 'asc' ? 'transform rotate-180' : ''"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -66,14 +74,14 @@
                     </svg>
                   </div>
                 </th>
-                <th class="py-3 px-6 text-left">Subject</th>
-                <th class="py-3 px-6 text-left">Issue</th>
-                <th class="py-3 px-6 text-left cursor-pointer" @click="sortTable('created_at')">
+                <th class="px-6 py-3 text-left">Subject</th>
+                <th class="px-6 py-3 text-left">Issue</th>
+                <th class="px-6 py-3 text-left cursor-pointer" @click="sortTable('created_at')">
                   <div class="flex items-center">
                     Date
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 ml-2"
+                      class="w-4 h-4 ml-2"
                       :class="sortKey === 'created_at' && sortOrder === 'asc' ? 'transform rotate-180' : ''"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -83,37 +91,36 @@
                     </svg>
                   </div>
                 </th>
-                <th class="py-3 px-6 text-left">Action</th>
+                <th class="px-6 py-3 text-left">Action</th>
               </tr>
             </thead>
             <tbody>
               <tr
                 v-for="(ticket, index) in paginatedTickets"
                 :key="ticket.id"
-                class="border-t hover:bg-gray-100 transition-colors duration-300"
+                class="transition-colors duration-300 border-t hover:bg-gray-100"
               >
-                <td class="py-4 px-6">{{ ticket.ticket_number }}</td>
-                <td class="py-4 px-6">{{ ticket.clientname }}</td>
-                <td class="py-4 px-6">{{ ticket.assign_by }}</td>
-                <td class="py-4 px-6">{{ ticket.kategori_name }}</td>
-                <td class="py-4 px-6">
+                <td class="px-6 py-4">{{ ticket.ticket_number }}</td>
+                <td class="px-6 py-4">{{ ticket.clientname }}</td>
+                <td class="px-6 py-4">{{ ticket.assign_by }}</td>
+                <td class="px-6 py-4">{{ ticket.kategori_name }}</td>
+                <td class="px-6 py-4">
                   <select
                     v-model="ticket.status"
                     @change="updateTicketStatus(ticket)"
-                    class="px-2 py-1 border rounded bg-white text-gray-700"
+                    class="px-2 py-1 text-gray-700 bg-white border rounded"
                   >
                     <option value="open">Open</option>
                     <option value="in_progress">In Progress</option>
                     <option value="closed">Closed</option>
                   </select>
                 </td>
-                <td class="py-4 px-6">{{ ticket.subject }}</td>
-                <td class="py-4 px-6">{{ ticket.issue }}</td>
-                <td class="py-4 px-6">{{ new Date(ticket.created_at).toLocaleDateString() }}</td>
-                <td class="py-4 px-6">
+                <td class="px-6 py-4">{{ ticket.subject }}</td>
+                <td class="px-6 py-4">{{ ticket.issue }}</td>
+                <td class="px-6 py-4">{{ new Date(ticket.created_at).toLocaleDateString() }}</td>
+                <td class="px-6 py-4">
                   <button
-                    
-                    class="relative inline-block px-6 py-3 font-medium text-yellow-600 border-2 border-yellow-600 group rounded-lg bg-white hover:bg-yellow-600 hover:text-white transition duration-300"
+                    class="relative inline-block px-6 py-3 font-medium text-yellow-600 transition duration-300 bg-white border-2 border-yellow-600 rounded-lg group hover:bg-yellow-600 hover:text-white"
                   >
                     <span class="relative">Edit</span>
                   </button>
@@ -124,18 +131,18 @@
         </div>
 
         <!-- Pagination -->
-        <div class="mt-4 flex justify-center">
+        <div class="flex justify-center mt-4">
           <button
             @click="previousPage"
             :disabled="currentPage === 1"
-            class="px-4 py-2 mx-1 border rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            class="px-4 py-2 mx-1 bg-gray-200 border rounded hover:bg-gray-300 disabled:opacity-50"
           >
             Previous
           </button>
           <button
             @click="nextPage"
             :disabled="currentPage === totalPages"
-            class="px-4 py-2 mx-1 border rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            class="px-4 py-2 mx-1 bg-gray-200 border rounded hover:bg-gray-300 disabled:opacity-50"
           >
             Next
           </button>
@@ -165,15 +172,19 @@ onMounted(() => {
 
 // Computed properties for filtering, sorting, and paginating tickets
 const filteredTickets = computed(() => {
-  let tickets = ticketStore.tickets.filter(ticket =>
-    ticket.ticket_number.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    ticket.clientname.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    ticket.assign_by.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    ticket.kategori_name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    ticket.status.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    ticket.subject.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    ticket.issue.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
+  let tickets = ticketStore.tickets;
+
+  if (searchQuery.value) {
+    tickets = tickets.filter(ticket =>
+      ticket.ticket_number?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      ticket.clientname?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      ticket.assign_by?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      ticket.kategori_name?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      ticket.status?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      ticket.subject?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      ticket.issue?.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
+  }
 
   if (sortKey.value) {
     tickets = tickets.sort((a, b) => {
@@ -219,6 +230,12 @@ const sortTable = (key: string) => {
 
 const updateTicketStatus = (ticket: any) => {
   ticketStore.updateTicket(ticket.ticket_number, ticket.status);
+};
+
+// Perform search when search button is clicked
+const performSearch = () => {
+  currentPage.value = 1; // Reset to first page after search
+  ticketStore.fetchTickets(); // Re-fetch tickets or apply the search filter
 };
 
 // Pagination methods
