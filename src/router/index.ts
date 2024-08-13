@@ -6,12 +6,21 @@ import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import AddTicketView from '../views/AddTicketView.vue';
 import EditTicketView from '../views/EditTicketView.vue';
+import KategoriView from '../views/KategoriView.vue';
+import AddKategoriView from '../views/AddKategoriView.vue';
+import EditKategoriView from '../views/EditKategoriView.vue';
 
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: TicketView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/kategori',
+    name: 'Kategori',
+    component: KategoriView,
     meta: { requiresAuth: true }
   },
   {
@@ -28,6 +37,18 @@ const routes = [
     path: '/addticket',
     name: 'addticket',
     component: AddTicketView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/addkategori',
+    name: 'addkategori',
+    component: AddKategoriView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/editkategori/:id',
+    name: 'editkategori',
+    component: EditKategoriView,
     meta: { requiresAuth: true }
   },
   {
