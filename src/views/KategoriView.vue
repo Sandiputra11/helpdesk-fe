@@ -2,9 +2,9 @@
     <div class="min-h-screen bg-gray-100">
       <Navbar />
       <div class="container mx-auto mt-8">
-        <div class="p-6 bg-gray-100 min-h-screen">
-          <div class="max-w-8xl py-6 px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center">
+        <div class="min-h-screen p-6 bg-gray-100">
+          <div class="px-4 py-6 max-w-8xl sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
               <h1 class="text-3xl font-bold text-gray-900">Categories</h1>
   
               <input
@@ -16,7 +16,7 @@
   
               <button
                 @click="addKategori"
-                class="relative inline-block px-6 py-3 font-medium text-green-600 border-2 border-green-600 group rounded-lg bg-white hover:bg-green-600 hover:text-white transition duration-300"
+                class="relative inline-block px-6 py-3 font-medium text-green-600 transition duration-300 bg-white border-2 border-green-600 rounded-lg group hover:bg-green-600 hover:text-white"
               >
                 <span class="relative">Add</span>
               </button>
@@ -28,31 +28,31 @@
             <table class="min-w-full bg-white border">
               <thead class="bg-gray-200">
                 <tr>
-                  <th class="py-3 px-6 text-left">ID</th>
-                  <th class="py-3 px-6 text-left">Category Name</th>
-                  <th class="py-3 px-6 text-left">Status</th>
-                  <th class="py-3 px-6 text-left">Action</th>
+                  <th class="px-6 py-3 text-left">ID</th>
+                  <th class="px-6 py-3 text-left">Category Name</th>
+                  <th class="px-6 py-3 text-left">Status</th>
+                  <th class="px-6 py-3 text-left">Action</th>
                 </tr>
               </thead>
               <tbody>
                 <tr
                   v-for="kategori in filteredKategoris"
                   :key="kategori.id"
-                  class="border-t hover:bg-gray-100 transition-colors duration-300"
+                  class="transition-colors duration-300 border-t hover:bg-gray-100"
                 >
-                  <td class="py-4 px-6">{{ kategori.id }}</td>
-                  <td class="py-4 px-6">{{ kategori.nama_kategori }}</td>
-                  <td class="py-4 px-6">{{ kategori.status }}</td>
-                  <td class="py-4 px-6">
+                  <td class="px-6 py-4">{{ kategori.id }}</td>
+                  <td class="px-6 py-4">{{ kategori.nama_kategori }}</td>
+                  <td class="px-6 py-4">{{ kategori.status }}</td>
+                  <td class="px-6 py-4">
                     <button
                       @click="editKategori(kategori.id)"
-                      class="relative inline-block px-6 py-3 font-medium text-yellow-600 border-2 border-yellow-600 group rounded-lg bg-white hover:bg-yellow-600 hover:text-white transition duration-300"
+                      class="relative inline-block px-6 py-3 font-medium text-yellow-600 transition duration-300 bg-white border-2 border-yellow-600 rounded-lg group hover:bg-yellow-600 hover:text-white"
                     >
                       <span class="relative">Edit</span>
                     </button>
                     <button
                       @click="deleteKategori(kategori.id)"
-                      class="relative inline-block px-6 py-3 font-medium text-red-600 border-2 border-red-600 group rounded-lg bg-white hover:bg-red-600 hover:text-white transition duration-300"
+                      class="relative inline-block px-6 py-3 font-medium text-red-600 transition duration-300 bg-white border-2 border-red-600 rounded-lg group hover:bg-red-600 hover:text-white"
                     >
                       <span class="relative">Delete</span>
                     </button>
@@ -81,10 +81,11 @@
   });
   
   const filteredKategoris = computed(() => {
-    return kategoriStore.kategoris.filter(kategori =>
-      kategori.nama_kategori.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
-  });
+  return kategoriStore.kategoris.filter(kategori =>
+    kategori.nama_kategori?.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
+
   
   const addKategori = () => {
     router.push({ name: 'addkategori' });
