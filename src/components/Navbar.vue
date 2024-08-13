@@ -1,6 +1,10 @@
 <template>
   <nav class="flex items-center justify-between p-4 bg-white shadow-sm">
     <div class="flex items-center space-x-6">
+      <!-- Logo -->
+      <div class="text-xl font-bold text-gray-700">
+        NexTix
+      </div>
       <ul class="flex space-x-4 font-medium text-gray-700">
         <li class="relative">
           <button @click="toggleDropdown" class="transition-colors duration-300 hover:text-blue-500">
@@ -20,11 +24,16 @@
         <li><router-link to="#" class="transition-colors duration-300 hover:text-blue-500">Report</router-link></li>
       </ul>
     </div>
-    <div>
-      <button @click="handleLogout" v-if="isLoggedIn" class="px-4 py-2 text-gray-700 transition duration-300 rounded-full">Logout</button>
-      <div v-else>
-        <router-link to="/login" class="px-4 py-2 text-gray-700 transition duration-300 rounded-full">Login</router-link>
-        <router-link to="/register" class="px-4 py-2 text-gray-700 transition duration-300 rounded-full">Register</router-link>
+    <div class="flex items-center space-x-4">
+      <div v-if="isLoggedIn" class="text-gray-700">
+        Hai, {{ authStore.user.name }}!
+      </div>
+      <div>
+        <button @click="handleLogout" v-if="isLoggedIn" class="px-4 py-2 text-gray-700 transition duration-300 rounded-full">Logout</button>
+        <div v-else>
+          <router-link to="/login" class="px-4 py-2 text-gray-700 transition duration-300 rounded-full">Login</router-link>
+          <router-link to="/register" class="px-4 py-2 text-gray-700 transition duration-300 rounded-full">Register</router-link>
+        </div>
       </div>
     </div>
   </nav>
@@ -36,8 +45,7 @@ import { useAuthStore } from '../stores/auth';
 
 const authStore = useAuthStore();
 
-const isLoggedIn = computed(()=> authStore.isAuthenticated)
-
+const isLoggedIn = computed(() => authStore.isAuthenticated);
 
 const dropdownOpen = ref(false);
 
