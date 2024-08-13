@@ -33,35 +33,54 @@
           <table class="min-w-full bg-white border">
             <thead class="bg-gray-200">
               <tr>
-                <th class="py-3 px-6 text-left">No</th>
-                <th class="py-3 px-6 text-left">
-  <button @click="sortTable('ticket_number')">
-    Ticket ID
-    <span v-if="sortKey === 'ticket_number'">
-      {{ sortOrder === 'asc' ? '▲' : '▼' }}
-    </span>
-  </button>
-</th>
-<th class="py-3 px-6 text-left">Client Name</th>
-<th class="py-3 px-6 text-left">
-  <button @click="sortTable('status')">
-    Status
-    <span v-if="sortKey === 'status'">
-      {{ sortOrder === 'asc' ? '▲' : '▼' }}
-    </span>
-  </button>
-</th>
-<th class="py-3 px-6 text-left">Issue</th>
-<th class="py-3 px-6 text-left">
-  <button @click="sortTable('created_at')">
-    Date
-    <span v-if="sortKey === 'created_at'">
-      {{ sortOrder === 'asc' ? '▲' : '▼' }}
-    </span>
-  </button>
-</th>
-<th class="py-3 px-6 text-left">Action</th>
-
+                <th class="py-3 px-6 text-left cursor-pointer" @click="sortTable('ticket_number')">
+                  <div class="flex items-center">
+                    Ticket ID
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 ml-2"
+                      :class="sortKey === 'ticket_number' && sortOrder === 'asc' ? 'transform rotate-180' : ''"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </th>
+                <th class="py-3 px-6 text-left">Client Name</th>
+                <th class="py-3 px-6 text-left cursor-pointer" @click="sortTable('status')">
+                  <div class="flex items-center">
+                    Status
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 ml-2"
+                      :class="sortKey === 'status' && sortOrder === 'asc' ? 'transform rotate-180' : ''"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </th>
+                <th class="py-3 px-6 text-left">Subject</th>
+                <th class="py-3 px-6 text-left cursor-pointer" @click="sortTable('created_at')">
+                  <div class="flex items-center">
+                    Date
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 ml-2"
+                      :class="sortKey === 'created_at' && sortOrder === 'asc' ? 'transform rotate-180' : ''"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </th>
+                <th class="py-3 px-6 text-left">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -70,19 +89,18 @@
                 :key="ticket.id"
                 class="border-t hover:bg-gray-100 transition-colors duration-300"
               >
-                <td class="py-4 px-6">{{ index + 1 + (currentPage - 1) * itemsPerPage }}</td>
                 <td class="py-4 px-6">{{ ticket.ticket_number }}</td>
                 <td class="py-4 px-6">{{ ticket.clientname }}</td>
                 <td class="py-4 px-6">
-                  <span
-                    :class="{
-                      'text-green-600 bg-green-100 px-2 py-1': ticket.status === 'open',
-                      'text-yellow-500 bg-yellow-100 px-2 py-1': ticket.status === 'in_progress',
-                      'text-red-600 bg-red-100 px-2 py-1': ticket.status === 'closed'
-                    }"
+                  <select
+                    v-model="ticket.status"
+                    @change="updateTicketStatus(ticket)"
+                    class="px-2 py-1 border rounded bg-white text-gray-700"
                   >
-                    {{ ticket.status }}
-                  </span>
+                    <option value="open">Open</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="closed">Closed</option>
+                  </select>
                 </td>
                 <td class="py-4 px-6">{{ ticket.issue }}</td>
                 <td class="py-4 px-6">{{ new Date(ticket.created_at).toLocaleDateString() }}</td>
@@ -188,6 +206,10 @@ const sortTable = (key: string) => {
     sortKey.value = key;
     sortOrder.value = 'asc';
   }
+};
+
+const updateTicketStatus = (ticket: any) => {
+  ticketStore.updateTicketStatus(ticket.id, ticket.status);
 };
 
 // Pagination methods
