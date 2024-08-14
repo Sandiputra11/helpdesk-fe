@@ -10,6 +10,9 @@ import KategoriView from '../views/KategoriView.vue';
 import AddKategoriView from '../views/AddKategoriView.vue';
 import EditKategoriView from '../views/EditKategoriView.vue';
 import ReportView from '../views/ReportView.vue';
+import UserManagementView from '../views/UserManagementView.vue'; // import the new view
+import AddUserView from '../views/AddUserView.vue'; // import the new AddUserView
+import EditUserView from '../views/EditUserView.vue'; // import the new EditUserView
 
 const routes = [
   {
@@ -62,6 +65,24 @@ const routes = [
     path: '/report',
     name: 'Report',
     component: ReportView,
+  },
+  {
+    path: '/user-management',
+    name: 'UserManagement',
+    component: UserManagementView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/adduser',
+    name: 'AddUser',
+    component: AddUserView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/edituser/:id',
+    name: 'EditUser',
+    component: EditUserView,
+    meta: { requiresAuth: true }
   }
 ];
 
