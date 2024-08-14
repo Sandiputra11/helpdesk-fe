@@ -62,14 +62,12 @@
   const nama_kategori = ref<string>();
   const status= ref<string>();
   
-  // Function to submit the form
+ 
   const submitForm = async () => {
     await kategoriStore.createKategori(nama_kategori.value , status.value);
-    router.push({ name: 'Kategori' }); // Navigate back to Kategori view
+    router.push({ name: 'Kategori' }); 
   };
   </script>
   
-  <style scoped>
-  /* Add scoped styles if needed */
-  </style>
+ 
   

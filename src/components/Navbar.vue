@@ -21,7 +21,7 @@
           </ul>
         </li>
         <li><router-link to="#" class="transition-colors duration-300 hover:text-blue-500">Solving</router-link></li>
-        <li><router-link to="#" class="transition-colors duration-300 hover:text-blue-500">Report</router-link></li>
+        <li><router-link to="/report" class="transition-colors duration-300 hover:text-blue-500">Report</router-link></li>
       </ul>
     </div>
     <div class="flex items-center space-x-4">

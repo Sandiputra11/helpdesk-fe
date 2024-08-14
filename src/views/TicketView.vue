@@ -75,7 +75,6 @@
                   </div>
                 </th>
                 <th class="px-6 py-3 text-left">Subject</th>
-                <th class="px-6 py-3 text-left">Issue</th>
                 <th class="px-6 py-3 text-left cursor-pointer" @click="sortTable('created_at')">
                   <div class="flex items-center">
                     Date
@@ -116,13 +115,13 @@
                   </select>
                 </td>
                 <td class="px-6 py-4">{{ ticket.subject }}</td>
-                <td class="px-6 py-4">{{ ticket.issue }}</td>
                 <td class="px-6 py-4">{{ new Date(ticket.created_at).toLocaleDateString() }}</td>
                 <td class="px-6 py-4">
                   <button
+                    @click="viewTicketDetail(ticket.ticket_number)"
                     class="relative inline-block px-6 py-3 font-medium text-yellow-600 transition duration-300 bg-white border-2 border-yellow-600 rounded-lg group hover:bg-yellow-600 hover:text-white"
                   >
-                    <span class="relative">Edit</span>
+                    <span class="relative">Detail</span>
                   </button>
                 </td>
               </tr>
@@ -170,7 +169,7 @@ onMounted(() => {
   ticketStore.fetchTickets();
 });
 
-// Computed properties for filtering, sorting, and paginating tickets
+
 const filteredTickets = computed(() => {
   let tickets = ticketStore.tickets;
 
@@ -181,8 +180,7 @@ const filteredTickets = computed(() => {
       ticket.assign_by?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       ticket.kategori_name?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       ticket.status?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      ticket.subject?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      ticket.issue?.toLowerCase().includes(searchQuery.value.toLowerCase())
+      ticket.subject?.toLowerCase().includes(searchQuery.value.toLowerCase())
     );
   }
 
@@ -215,9 +213,9 @@ const addTicket = () => {
   router.push({ name: 'addticket' });
 };
 
-// const editTicket = (ticketNumber: string) => {
-//   router.push({ name: 'editticket', params: { ticketNumber } });
-// };
+const viewTicketDetail = (ticketNumber: string) => {
+  router.push({ name: 'detailticket', params: { ticketNumber } });
+};
 
 const sortTable = (key: string) => {
   if (sortKey.value === key) {

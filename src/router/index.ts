@@ -5,10 +5,11 @@ import TicketView from '../views/TicketView.vue';
 import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import AddTicketView from '../views/AddTicketView.vue';
-import EditTicketView from '../views/EditTicketView.vue';
+import DetailTicketView from '../views/DetailTicketView.vue';
 import KategoriView from '../views/KategoriView.vue';
 import AddKategoriView from '../views/AddKategoriView.vue';
 import EditKategoriView from '../views/EditKategoriView.vue';
+import ReportView from '../views/ReportView.vue';
 
 const routes = [
   {
@@ -52,12 +53,16 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/editticket/:ticketNumber',
-    name: 'editticket',
-    component: EditTicketView,
+    path: '/detailticket/:ticketNumber', 
+    name: 'detailticket',
+    component: DetailTicketView,
     meta: { requiresAuth: true }
   },
-  // Tambahkan rute lainnya di sini
+  {
+    path: '/report',
+    name: 'Report',
+    component: ReportView,
+  }
 ];
 
 const router = createRouter({
@@ -70,7 +75,6 @@ router.beforeEach(async (to, from, next) => {
   if (pinia) {
     const authStore = useAuthStore(pinia);
 
-    // Refresh the token if it's present in cookies but not in the store
     if (authStore.token && !authStore.isAuthenticated) {
       try {
         await authStore.refreshToken();
@@ -82,7 +86,6 @@ router.beforeEach(async (to, from, next) => {
       }
     }
 
-    // Check if the route requires authentication
     if (to.meta.requiresAuth && !authStore.isAuthenticated) {
       next({ name: 'Login' });
     } else {
