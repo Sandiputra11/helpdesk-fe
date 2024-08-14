@@ -33,7 +33,7 @@ export const useTicketStore = defineStore('ticket', () => {
   const fetchTickets = async () => {
     try {
       const response = await axios.get('/api/auth/tickets');
-      state.tickets = response.data;
+      state.tickets = response.data.data;
     } catch (error) {
       handleError(error);
     }
@@ -42,7 +42,7 @@ export const useTicketStore = defineStore('ticket', () => {
   const fetchTicket = async (ticketNumber: string) => {
     try {
       const response = await axios.get(`/api/auth/tickets/${ticketNumber}`);
-      state.ticket = response.data;
+      state.ticket = response.data.data;
       return response.data;
     } catch (error) {
       handleError(error);

@@ -38,7 +38,7 @@
               Update Category
             </button>
             <router-link
-              to="{ name: 'Kategori }"
+              to="/kategori"
               class="inline-block px-6 py-3 ml-4 font-medium text-gray-600 transition duration-300 border-2 border-gray-300 rounded-lg hover:bg-gray-100"
             >
               Cancel

@@ -22,7 +22,15 @@ export const useKategoriStore = defineStore('kategori', () => {
   const fetchKategoris = async () => {
     try {
       const response = await axios.get('/api/auth/kategoris');
-      state.kategoris = response.data;
+      state.kategoris = response.data.data;
+    } catch (error) {
+      handleError(error);
+    }
+  };
+  const fetchActiveKategoris = async () => {
+    try {
+      const response = await axios.get('/api/auth/activekategoris');
+      state.kategoris = response.data.data;
     } catch (error) {
       handleError(error);
     }
@@ -30,8 +38,8 @@ export const useKategoriStore = defineStore('kategori', () => {
   const fetchKategori = async (id :number) => {
   try {
     const response = await axios.get(`/api/auth/kategoris/${id}`);
-    console.log(response.data[0]); // Log data untuk melihat strukturnya
-    return response.data[0];
+    console.log(response.data.data); // Log data untuk melihat strukturnya
+    return response.data.data;
   } catch (error) {
     handleError(error);
   }
@@ -69,6 +77,7 @@ export const useKategoriStore = defineStore('kategori', () => {
   return {
     ...toRefs(state),
     fetchKategoris,
+    fetchActiveKategoris,
     fetchKategori,
     createKategori,
     updateKategori,
