@@ -102,21 +102,21 @@
 <script setup lang="ts">
 import Navbar from '../components/Navbar.vue';
 import { ref, computed, onMounted } from 'vue';
+import { useUserStore } from '../stores/userStore';
 import { useRouter } from 'vue-router';
 
 const searchQuery = ref('');
+const userStore = useUserStore();
 const currentPage = ref(1);
 const itemsPerPage = ref(10); // Adjust the items per page as needed
 
 // Sample user data (replace with actual data from your store or API)
-const users = ref([
-  { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin' },
-  { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User' },
-  // Add more sample users here
-]);
+onMounted(()=>{
+userStore.fetchUsers();
+});
 
 const filteredUsers = computed(() => {
-  let userList = users.value;
+  let userList = userStore.users;
 
   if (searchQuery.value) {
     userList = userList.filter(user =>
@@ -149,9 +149,16 @@ const editUser = (id: number) => {
   router.push({ name: 'EditUser', params: { id } });
 };
 
-const deleteUser = (id: number) => {
-  // Add delete logic here
-  // console.log(Deleting user with ID ${id});
+const deleteUser = async(id: number) => {
+  const confirmDelete = confirm('Apakah Anda yakin ingin menghapus User ini?');
+if (confirmDelete) {
+  try {
+    await userStore.deleteUser(id);
+  } catch (error) {
+    console.error('Gagal Hapus',500);
+  }
+}
+  
 };
 
 const performSearch = () => {

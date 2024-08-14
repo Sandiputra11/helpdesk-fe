@@ -69,8 +69,12 @@
                       class="mt-1 block w-full border-2 border-gray-300 rounded-lg p-2"
                     >
                       <option value="" disabled>-- Pilih kategori --</option>
-                      <option v-for="category in categories" :key="category.id_category" :value="category.id_category">
-                        {{ category.name }}
+                      <option
+                        v-for="kategori in kategoriStore.kategoris"
+                        :key="kategori.id"
+                        :value="kategori.id"
+                      >
+                        {{ kategori.nama_kategori }}
                       </option>
                     </select>
                   </div>
@@ -86,6 +90,8 @@
               Tampilkan
             </button>
           </div>
+          <div v-if="reportStore.loading" class="mt-4 text-center">Loading...</div>
+          <div v-if="reportStore.error" class="mt-4 text-red-500 text-center">{{ reportStore.error }}</div>
         </div>
       </div>
     </div>
@@ -93,28 +99,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import Navbar from '../components/Navbar.vue';
+import { useKategoriStore } from '../stores/kategoriStore';
+import { useReportStore } from '../stores/reportStore';
 
+const kategoriStore = useKategoriStore();
+const reportStore = useReportStore();
 const selectedOption = ref('all');
 const startDate = ref('');
 const endDate = ref('');
 const selectedCategory = ref('');
 
-const categories = ref([
-  { id_category: '01', name: 'IT Support' },
-  { id_category: '02', name: 'Multimedia Design' },
-  { id_category: '03', name: 'Software Development' }
-]);
+onMounted(() => {
+  kategoriStore.fetchActiveKategoris();
+});
 
-const showReport = () => {
-  if (selectedOption.value === 'all') {
-    alert('Menampilkan semua data');
-  } else if (selectedOption.value === 'date') {
-    alert(`Menampilkan data dari tanggal ${startDate.value} hingga ${endDate.value}`);
-  } else if (selectedOption.value === 'category') {
-    alert(`Menampilkan data kategori ${selectedCategory.value}`);
-  }
+const showReport = async () => {
+  await reportStore.fetchReports(selectedOption.value, startDate.value, endDate.value, selectedCategory.value);
+  console.log(reportStore.reports);
 };
 </script>
 

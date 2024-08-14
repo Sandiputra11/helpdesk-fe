@@ -24,8 +24,9 @@
             <div class="mb-4">
               <label class="block mb-1 font-semibold text-gray-700">Role</label>
               <select v-model="role" required class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                <option value="Admin">Admin</option>
-                <option value="User">User</option>
+                <option value="admin">Admin</option>
+                <option value="support">Support</option>
+                <option value="client">Client</option>
               </select>
             </div>
   
@@ -53,21 +54,28 @@
   <script setup lang="ts">
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
+  import { useUserStore } from '../stores/userStore';
   import Navbar from '../components/Navbar.vue';
-  
+  const userStore= useUserStore();
   const name = ref('');
   const email = ref('');
   const password = ref('');  // Added password field
-  const role = ref('User');
+  const role = ref('client');
   const router = useRouter();
   
-  const submitForm = () => {
-    // Logic to add user goes here
+  const submitForm = async() => {
+    try {
+      await userStore.registerUser({
+        name: name.value,
+        email: email.value,
+        role: role.value,
+        password: password.value,
+      });
+      router.push({ name: 'UserManagement' });
+    } catch (error) {
+      console.error("Add User failed", error);
+    }
   
-    console.log('User added:', { name: name.value, email: email.value, password: password.value, role: role.value });
-  
-    // After adding user, redirect to user management
-    router.push({ name: 'UserManagement' });
   };
   
   const goBack = () => {

@@ -24,8 +24,9 @@
             <div class="mb-4">
               <label class="block mb-1 font-semibold text-gray-700">Role</label>
               <select v-model="role" required class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                <option value="Admin">Admin</option>
-                <option value="User">User</option>
+                <option value="admin">Admin</option>
+                <option value="support">Support</option>
+                <option value="client">Client</option>
               </select>
             </div>
   
@@ -54,24 +55,21 @@
   import { ref, onMounted } from 'vue';
   import { useRouter, useRoute } from 'vue-router';
   import Navbar from '../components/Navbar.vue';
+  import { useUserStore } from '../stores/userStore';
   
-  // Sample user data (replace with actual data from your store or API)
-  const users = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User' },
-    // Add more sample users here
-  ];
+  const userStore = useUserStore();
+ 
   
   const name = ref('');
   const email = ref('');
   const password = ref('');  // Added password field
-  const role = ref('User');
+  const role = ref('');
   const router = useRouter();
   const route = useRoute();
   
-  onMounted(() => {
-    const userId = route.params.id;
-    const user = users.find(user => user.id === parseInt(userId as string));
+  const userId = route.params.id;
+  onMounted(async() => {
+    const user = await userStore.fetchUserById(userId);
     if (user) {
       name.value = user.name;
       email.value = user.email;
@@ -79,15 +77,23 @@
     }
   });
   
-  const submitForm = () => {
-    // Logic to update user goes here
-  
-    console.log('User updated:', { name: name.value, email: email.value, password: password.value, role: role.value });
-  
-    // After updating user, redirect to user management
+  const submitForm = async () => {
+  try {
+    // Call the updateUser method from the store with the updated user data
+    await userStore.updateUser(userId, {
+      name: name.value,
+      email: email.value,
+      role: role.value,
+      password: password.value , // Only include password if it's provided
+    });
+    
+    // After successful update, navigate back to User Management
     router.push({ name: 'UserManagement' });
-  };
-  
+  } catch (error) {
+    console.error('Failed to update user', error);
+  }
+};
+
   const goBack = () => {
     router.push({ name: 'UserManagement' });
   };

@@ -78,6 +78,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await axios.post('/api/auth/refresh', {}, {
         headers: {
+          // Authorization: Bearer `${token}`,
           Accept: 'application/json',
         },
       });
