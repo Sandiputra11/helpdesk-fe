@@ -87,6 +87,31 @@ export const useTicketStore = defineStore('ticket', () => {
     }
   };
 
+  const downloadAttachment = async (ticketNumber: string) => {
+    try {
+      const ticket = state.tickets.find(t => t.ticket_number === ticketNumber);
+      if (!ticket || !ticket.attachment) {
+        console.error('Attachment not found for this ticket');
+        return;
+      }
+
+      const response = await axios.get(`/api/auth/tickets/download/${ticketNumber}`, {
+        responseType: 'blob', // Important for handling file downloads
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', ticket.attachment); // Adjust the filename as needed
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading attachment:', error);
+      handleError(error);
+    }
+  };
+
   return {
     ...toRefs(state),
     fetchTickets,
@@ -94,5 +119,6 @@ export const useTicketStore = defineStore('ticket', () => {
     addTicket,
     updateTicket,
     deleteTicket,
+    downloadAttachment, // Return the downloadAttachment function
   };
 });

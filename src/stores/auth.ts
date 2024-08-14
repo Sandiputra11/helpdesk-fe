@@ -18,7 +18,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const setToken = (newToken: string) => {
     token.value = newToken;
-    Cookies.set('token', newToken, { expires: 2 });
+    Cookies.set('token', newToken, { expires: 1 });
   };
 
   const setUser = (newUser: User) => {
