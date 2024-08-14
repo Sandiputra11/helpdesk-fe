@@ -1,7 +1,10 @@
 <template>
   <div class="flex items-center justify-center min-h-screen bg-gray-100">
+    
     <div class="p-8 bg-white rounded-lg shadow-md w-96">
-      <h2 class="mb-4 text-2xl font-bold text-center">Login</h2>
+      <div class="text-2xl font-bold text-black-700 text-center mb-4">
+        NexTix
+      </div>
       <form @submit.prevent="login">
         <div class="mb-4">
           <label for="email" class="block text-sm font-medium text-gray-700">Email</label>

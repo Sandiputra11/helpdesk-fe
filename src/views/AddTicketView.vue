@@ -82,7 +82,7 @@ import Navbar from '../components/Navbar.vue';
 
 
 onMounted(()=>{
-  kategoriStore.fetchKategoris()
+  kategoriStore.fetchActiveKategoris();
 })
 const ticketStore = useTicketStore();
 const kategoriStore = useKategoriStore();
