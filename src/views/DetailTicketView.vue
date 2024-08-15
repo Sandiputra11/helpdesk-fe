@@ -56,7 +56,7 @@
       <!-- Client Comments -->
       <div
   v-for="(comment, index) in commentStore.comments"
-  :key="index"
+  :key="comment.id"
   class="max-w-3xl mx-auto mb-6 bg-white p-4 rounded-lg shadow-md"
 >
   <div class="flex justify-between items-center">

@@ -104,16 +104,31 @@
                 <td class="px-6 py-4">{{ ticket.assign_by }}</td>
                 <td class="px-6 py-4">{{ ticket.kategori_name }}</td>
                 <td class="px-6 py-4">
-                  <select
-                    v-model="ticket.status"
-                    @change="updateTicketStatus(ticket)"
-                    class="px-2 py-1 text-gray-700 bg-white border rounded"
-                  >
-                    <option value="open">Open</option>
-                    <option value="in_progress">In Progress</option>
-                    <option value="closed">Closed</option>
-                  </select>
-                </td>
+  <select
+    v-if="authStore.user.role === 'admin' || authStore.user.role === 'support'"
+    v-model="ticket.status"
+    @change="updateTicketStatus(ticket)"
+    class="px-2 py-1 text-gray-700 bg-white border rounded"
+  >
+    <option value="open">Open</option>
+    <option value="in_progress">In Progress</option>
+    <option value="closed">Closed</option>
+  </select>
+
+  <!-- Display status text for clients with conditional styling -->
+  <span
+    v-else
+    :class="{
+      'bg-green-100 text-green-800': ticket.status === 'open',
+      'bg-yellow-100 text-yellow-800': ticket.status === 'in_progress',
+      'bg-red-100 text-red-800 ': ticket.status === 'closed'
+    }"
+    class="py-1 px-2.5 border-none rounded font-medium"
+  >
+    {{ ticket.status }}
+  </span>
+</td>
+
                 <td class="px-6 py-4">{{ ticket.subject }}</td>
                 <td class="px-6 py-4">{{ new Date(ticket.created_at).toLocaleDateString() }}</td>
                 <td class="px-6 py-4">
@@ -155,9 +170,10 @@
 import Navbar from '../components/Navbar.vue';
 import { ref, computed, onMounted } from 'vue';
 import { useTicketStore } from '../stores/ticketStore';
+import { useAuthStore } from '../stores/auth';
 import { useRouter } from 'vue-router';
 
-
+const authStore =useAuthStore();
 const ticketStore = useTicketStore();
 const router = useRouter();
 const searchQuery = ref('');
