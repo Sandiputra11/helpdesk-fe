@@ -9,6 +9,7 @@ interface User {
   id: number;
   name: string;
   email: string;
+  role:string
   // Add any other properties as needed
 }
 
@@ -66,8 +67,8 @@ export const useAuthStore = defineStore('auth', () => {
   const fetchUser = async () => {
     try {
       const response = await axios.post('/api/auth/me', {});
-      const { id, name, email } = response.data;
-      setUser({ id, name, email });
+      const { id, name, email, role } = response.data;
+      setUser({ id, name, email, role });
     } catch (error) {
       handleError(error); // Use error handler
       logout();

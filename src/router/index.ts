@@ -22,13 +22,13 @@ const routes = [
     path: '/',
     name: 'Home',
     component: TicketView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ['client','support', 'admin'] },
   },
   {
     path: '/kategori',
     name: 'Kategori',
     component: KategoriView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ['admin'] },
   },
   {
     path: '/login',
@@ -44,63 +44,64 @@ const routes = [
     path: '/addticket',
     name: 'AddTicket',
     component: AddTicketView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ['client','support', 'admin'] },
   },
   {
     path: '/addkategori',
     name: 'AddKategori',
     component: AddKategoriView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: [ 'admin'] },
   },
   {
     path: '/editkategori/:id',
     name: 'EditKategori',
     component: EditKategoriView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: [ 'admin'] },
   },
   {
     path: '/detailticket/:ticketNumber',
     name: 'DetailTicket',
     component: DetailTicketView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ['client','support', 'admin'] },
   },
   {
     path: '/report',
     name: 'Report',
     component: ReportView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: [ 'admin'] },
   },
   {
     path: '/user-management',
     name: 'UserManagement',
     component: UserManagementView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: [ 'admin'] },
   },
   {
     path: '/adduser',
     name: 'AddUser',
     component: AddUserView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true,roles: [ 'admin'] },
   },
   {
     path: '/edituser/:id',
     name: 'EditUser',
     component: EditUserView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: [ 'admin'] },
   },
   {
     path: '/report-result',
     name: 'ReportResult',
     component: ReportResultView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true,roles: ['admin'] },
   },
   {
     path: '/solving',
     name: 'SolvingView',
     component: SolvingView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ['client','support', 'admin'] },
   }  
 ];
+
 
 const router = createRouter({
   history: createWebHistory(),
@@ -125,9 +126,20 @@ router.beforeEach(async (to, from, next) => {
 
     if (to.meta.requiresAuth && !authStore.isAuthenticated) {
       next({ name: 'Login' });
-    } else {
-      next();
+      return;
     }
+
+    if (to.meta.roles && to.meta.roles.length > 0) {
+      const userRoles = authStore.user?.role || [];
+      const hasRole = to.meta.roles.some(role => userRoles.includes(role));
+
+      if (!hasRole) {
+        next({ name: 'Home' }); // Redirect to a safe route or an access denied page
+        return;
+      }
+    }
+
+    next();
   } else {
     next();
   }
