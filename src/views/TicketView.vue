@@ -210,11 +210,11 @@ const totalPages = computed(() => {
 });
 
 const addTicket = () => {
-  router.push({ name: 'addticket' });
+  router.push({ name: 'AddTicket' });
 };
 
 const viewTicketDetail = (ticketNumber: string) => {
-  router.push({ name: 'detailticket', params: { ticketNumber } });
+  router.push({ name: 'DetailTicket', params: { ticketNumber } });
 };
 
 const sortTable = (key: string) => {

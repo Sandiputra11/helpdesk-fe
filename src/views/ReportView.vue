@@ -5,7 +5,7 @@
       <div class="p-6 bg-gray-100 min-h-screen">
         <div class="max-w-8xl py-6 px-4 sm:px-6 lg:px-8 bg-white rounded-lg shadow-lg border border-gray-300">
           <h1 class="text-3xl font-bold text-gray-900 mb-6 text-center">
-            Laporan by NexTix
+            Pilih Kriteria Laporan
           </h1>
 
           <table class="w-full border-collapse">
@@ -82,16 +82,15 @@
               </tr>
             </tbody>
           </table>
+
           <div class="mt-6 flex justify-end">
             <button
-              @click="showReport"
+              @click="goToReportResult"
               class="px-6 py-3 font-medium text-white bg-blue-600 border-2 border-blue-600 rounded-lg hover:bg-blue-700 transition duration-300"
             >
               Tampilkan
             </button>
           </div>
-          <div v-if="reportStore.loading" class="mt-4 text-center">Loading...</div>
-          <div v-if="reportStore.error" class="mt-4 text-red-500 text-center">{{ reportStore.error }}</div>
         </div>
       </div>
     </div>
@@ -99,25 +98,28 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import Navbar from '../components/Navbar.vue';
 import { useKategoriStore } from '../stores/kategoriStore';
-import { useReportStore } from '../stores/reportStore';
 
+const router = useRouter();
 const kategoriStore = useKategoriStore();
-const reportStore = useReportStore();
 const selectedOption = ref('all');
 const startDate = ref('');
 const endDate = ref('');
 const selectedCategory = ref('');
 
-onMounted(() => {
-  kategoriStore.fetchActiveKategoris();
-});
-
-const showReport = async () => {
-  await reportStore.fetchReports(selectedOption.value, startDate.value, endDate.value, selectedCategory.value);
-  console.log(reportStore.reports);
+const goToReportResult = () => {
+  router.push({
+    name: 'ReportResult',
+    query: {
+      option: selectedOption.value,
+      startDate: startDate.value,
+      endDate: endDate.value,
+      category: selectedCategory.value,
+    },
+  });
 };
 </script>
 

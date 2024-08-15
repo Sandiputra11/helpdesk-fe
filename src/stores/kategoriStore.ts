@@ -29,7 +29,7 @@ export const useKategoriStore = defineStore('kategori', () => {
   };
   const fetchActiveKategoris = async () => {
     try {
-      const response = await axios.get('/api/auth/activekategoris');
+      const response = await axios.get('/api/auth/kategoris/active');
       state.kategoris = response.data.data;
     } catch (error) {
       handleError(error);
