@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useAuthStore } from '../stores/auth';
 import { getActivePinia } from 'pinia';
 
-axios.defaults.baseURL = 'http://192.168.1.221:8000';
+axios.defaults.baseURL = 'http://127.0.0.1:8000';
 
 // Add a request interceptor
 axios.interceptors.request.use(
