@@ -1,20 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import { getActivePinia } from 'pinia';
-import TicketView from '../views/TicketView.vue';
-import LoginView from '../views/LoginView.vue';
-import RegisterView from '../views/RegisterView.vue';
-import AddTicketView from '../views/AddTicketView.vue';
-import DetailTicketView from '../views/DetailTicketView.vue';
-import KategoriView from '../views/KategoriView.vue';
-import AddKategoriView from '../views/AddKategoriView.vue';
-import EditKategoriView from '../views/EditKategoriView.vue';
-import ReportView from '../views/ReportView.vue';
-import UserManagementView from '../views/UserManagementView.vue';
-import AddUserView from '../views/AddUserView.vue';
-import EditUserView from '../views/EditUserView.vue';
-import ReportResultView from '../views/ReportResultView.vue';
-import SolvingView from '../views/SolvingView.vue';
+
+const TicketView = (() => import('../views/TicketView.vue'));
+const LoginView = (() => import('../views/LoginView.vue'));
+const RegisterView = (() => import('../views/RegisterView.vue'));
+const AddTicketView = (() => import('../views/AddTicketView.vue'));
+const DetailTicketView = (() => import('../views/DetailTicketView.vue'));
+const KategoriView = (() => import('../views/KategoriView.vue'));
+const AddKategoriView = (() => import('../views/AddKategoriView.vue'));
+const EditKategoriView = (() => import('../views/EditKategoriView.vue'));
+const ReportView = (() => import('../views/ReportView.vue'));
+const UserManagementView = (() => import('../views/UserManagementView.vue'));
+const AddUserView = (() => import('../views/AddUserView.vue'));
+const EditUserView = (() => import('../views/EditUserView.vue'));
+const ReportResultView = (() => import('../views/ReportResultView.vue'));
+const SolvingView = (() => import('../views/SolvingView.vue'));
 
 const routes = [
   {
