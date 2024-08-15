@@ -1,24 +1,26 @@
 <template>
     <div class="min-h-screen bg-gray-100">
-      <Navbar />
       <div class="container mx-auto mt-8">
         <div class="p-6 bg-gray-100 min-h-screen">
-          <div class="max-w-8xl py-6 px-4 sm:px-6 lg:px-8 bg-white rounded-lg shadow-lg border border-gray-300">
+          <div class="max-w-8xl py-6 px-4 sm:px-6 lg:px-8 bg-white rounded-lg shadow-lg border border-gray-300 relative">
             <h1 class="text-3xl font-bold text-gray-900 mb-6 text-center">
               Hasil Laporan
             </h1>
+  
+            <button @click="exportToExcel" class="absolute top-6 right-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+              Export to Excel
+            </button>
   
             <div v-if="reportStore.reports.length > 0" class="mt-6">
               <table class="w-full border-collapse">
                 <thead>
                   <tr>
-                      <th class="py-3 px-6 text-left border-b border-gray-200">Ticket Number</th>
-                      <th class="py-3 px-6 text-left border-b border-gray-200">Date</th>
+                    <th class="py-3 px-6 text-left border-b border-gray-200">Ticket Number</th>
+                    <th class="py-3 px-6 text-left border-b border-gray-200">Date</th>
                     <th class="py-3 px-6 text-left border-b border-gray-200">Client Name</th>
                     <th class="py-3 px-6 text-left border-b border-gray-200">Kategori</th>
                     <th class="py-3 px-6 text-left border-b border-gray-200">Subject</th>
                     <th class="py-3 px-6 text-left border-b border-gray-200">Status</th>
-                    
                   </tr>
                 </thead>
                 <tbody>
@@ -29,7 +31,6 @@
                     <td class="py-3 px-6 border-b border-gray-200">{{ report.kategori_name }}</td>
                     <td class="py-3 px-6 border-b border-gray-200">{{ report.subject }}</td>
                     <td class="py-3 px-6 border-b border-gray-200">{{ report.status }}</td>
-                    
                   </tr>
                 </tbody>
               </table>
@@ -38,11 +39,12 @@
             <div v-else class="mt-6 text-center text-gray-500">
               Tidak ada data yang ditemukan sesuai kriteria.
             </div>
+  
             <div class="flex justify-end">
-            <button @click="goBack" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-              Back
-            </button>
-          </div>
+              <button @click="goBack" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                Back
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -51,9 +53,9 @@
   
   <script setup lang="ts">
   import { onMounted } from 'vue';
-  import Navbar from '../components/Navbar.vue';
   import { useRoute, useRouter } from 'vue-router';
   import { useReportStore } from '../stores/reportStore';
+  import ExcelJS from 'exceljs';
   
   const route = useRoute();
   const router = useRouter();
@@ -63,8 +65,59 @@
     const { option, startDate, endDate, category } = route.query;
     await reportStore.fetchReports(option, startDate, endDate, category);
   });
+  
   const goBack = () => {
-    router.push({ name: 'Report' }); 
+    router.push({ name: 'Report' });
+  };
+  
+  const exportToExcel = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Reports');
+  
+    worksheet.columns = [
+      { header: 'Ticket Number', key: 'ticket_number', width: 15 },
+      { header: 'Date', key: 'date', width: 12 },
+      { header: 'Client Name', key: 'clientname', width: 20 },
+      { header: 'Kategori', key: 'kategori_name', width: 15 },
+      { header: 'Subject', key: 'subject', width: 30 },
+      { header: 'Status', key: 'status', width: 10 }
+    ];
+  
+    worksheet.getRow(1).font = { bold: true };
+    worksheet.getRow(1).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FF00B0F0' } // Biru Muda
+    };
+    worksheet.getRow(1).alignment = { vertical: 'middle', horizontal: 'center' };
+  
+    reportStore.reports.forEach((report, index) => {
+      const rowIndex = index + 2; // Mulai dari baris kedua
+      worksheet.addRow({
+        ticket_number: report.ticket_number,
+        date: new Date(report.created_at).toLocaleDateString(),
+        clientname: report.clientname,
+        kategori_name: report.kategori_name,
+        subject: report.subject,
+        status: report.status,
+      });
+  
+      const row = worksheet.getRow(rowIndex);
+      row.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFE6E6E6' } // Abu-abu Muda
+      };
+    });
+  
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'Laporan_Tiket.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
   </script>
   

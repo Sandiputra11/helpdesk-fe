@@ -14,6 +14,7 @@ import UserManagementView from '../views/UserManagementView.vue';
 import AddUserView from '../views/AddUserView.vue';
 import EditUserView from '../views/EditUserView.vue';
 import ReportResultView from '../views/ReportResultView.vue';
+import SolvingView from '../views/SolvingView.vue';
 
 const routes = [
   {
@@ -92,6 +93,12 @@ const routes = [
     component: ReportResultView,
     meta: { requiresAuth: true },
   },
+  {
+    path: '/solving',
+    name: 'SolvingView',
+    component: SolvingView,
+    meta: { requiresAuth: true },
+  }  
 ];
 
 const router = createRouter({

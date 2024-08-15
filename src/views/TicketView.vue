@@ -157,6 +157,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useTicketStore } from '../stores/ticketStore';
 import { useRouter } from 'vue-router';
 
+
 const ticketStore = useTicketStore();
 const router = useRouter();
 const searchQuery = ref('');
