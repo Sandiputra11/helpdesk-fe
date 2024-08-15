@@ -68,7 +68,6 @@ const status = ref('');
 const categoryId = route.params.id; // Assuming 'id' is passed as a route parameter
 onMounted(async () => {
   const existingKategori = await kategoriStore.fetchKategori(categoryId);
-  console.log('Fetched Category:', existingKategori); // Tambahkan log ini
   
   if (existingKategori) {
     nama_kategori.value = existingKategori.nama_kategori;

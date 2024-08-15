@@ -3,70 +3,101 @@
     <Navbar />
     <div class="container mx-auto mt-8">
       
-      <!-- New Card at the Top -->
+      <!-- Ticket Information -->
       <div class="max-w-3xl mx-auto mb-6 bg-white p-4 rounded-lg shadow-md">
         <div class="flex justify-between items-center">
-          <!-- Left Side: Ticket ID and Client Name -->
           <div class="flex space-x-4">
             <h3 class="text-lg font-bold">Ticket Number: {{ ticket.ticket_number }}</h3>
             <h3 class="text-lg font-bold">Client Name: {{ ticket.client_name }}</h3>
           </div>
-          <!-- Right Side: Date -->
           <div>
             <p class="text-gray-500">{{ new Date(ticket.created_at).toLocaleDateString() }}</p>
           </div>
         </div>
+        <div class="text-xl"><h2><strong>Subject:</strong> {{ ticket.subject }}</h2></div>
         <button @click="toggleReadMore" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          Read More
+          Show Issue
         </button>
 
-        <!-- Conditionally Render Additional Information -->
         <div v-if="isReadMore" class="mt-4">
-          <p><strong>Subject:</strong> {{ ticket.subject }}</p>
-          <p><strong>Issue:</strong> {{ ticket.issue }}</p>
-          <p><strong>Attachment:</strong> 
-            <a :href="ticket.attachment_url" class="text-blue-500 underline">
-              {{ ticket.attachment_name }}
-            </a>
-          </p>
+          <div>
+            <h1 class="text-xl font-bold">Issue:</h1>
+            <textarea
+              class="mt-2 w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              rows="5"
+              v-model="ticket.issue"
+              readonly
+            ></textarea>
+          </div>
+          <div class="mt-4">
+    <p><strong>Attachment:</strong></p>
+    <div v-if="isImage(ticket.attachment_name)">
+      <img :src="ticket.attachment_url" alt="Attachment Image" class="mt-2 max-w-full rounded-md" />
+      <button
+        @click="ticketStore.downloadAttachment(ticket.ticket_number)"
+        class="mt-2 inline-block px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+      >
+        Download {{ ticket.attachment_name }}
+      </button>
+    </div>
+    <div v-else>
+      <a
+        :href="ticket.attachment_url"
+        download
+        class="mt-2 inline-block px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+      >
+        Download {{ ticket.attachment_name }}
+      </a>
+    </div>
+  </div>
         </div>
       </div>
 
-      <!-- Loop through client comments -->
+      <!-- Client Comments -->
       <div
-        v-for="(comment, index) in comments"
-        :key="index"
-        class="max-w-3xl mx-auto mb-6 bg-white p-4 rounded-lg shadow-md"
+  v-for="(comment, index) in commentStore.comments"
+  :key="index"
+  class="max-w-3xl mx-auto mb-6 bg-white p-4 rounded-lg shadow-md"
+>
+  <div class="flex justify-between items-center">
+    <h3 class="text-lg font-bold mb-2">{{ comment.user_name }}</h3>
+    <p class="text-gray-500 text-sm">{{ new Date(comment.created_at).toLocaleString() }}</p>
+  </div>
+  <hr class="my-4">
+  <h4 class="text-md font-semibold mb-2">{{ comment.comment }}</h4>
+  <!-- <a v-if="comment.attachment_url" :href="comment.attachment_url" class="text-blue-500 underline">
+    {{ comment.attachment_name }}
+  </a> -->
+  <div v-if="comment.attachment_url">
+    <div v-if="isCommentImage(comment.attachment_name)">
+      <img :src="comment.attachment_url" alt="Attachment Image" class="mt-2 max-w-full rounded-md" />
+      <button
+        @click="commentStore.downloadCommentAttachment(comment.id)"
+        class="mt-2 inline-block px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
       >
-        <h3 class="text-lg font-bold mb-2">{{ comment.name }}</h3>
-        <hr class="my-4">
-        <h4 class="text-md font-semibold mb-2">{{ comment.text }}</h4>
-        <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          Read More
-        </button>
-      </div>
+        Download {{ comment.attachment_name }}
+      </button>
+    </div>
+    <div v-else>
+      <button
+        @click="commentStore.downloadCommentAttachment(comment.id)"
+        class="mt-2 inline-block px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+      >
+        Download {{ comment.attachment_name }}
+      </button>
+    </div>
+  </div>
 
-      <!-- Loop through admin replies -->
-      <div
-        v-for="(reply, index) in replies"
-        :key="index"
-        class="max-w-3xl mx-auto mb-6 bg-white p-4 rounded-lg shadow-md"
-      >
-        <h3 class="text-lg font-bold mb-2">Admin Reply</h3>
-        <p class="text-gray-700">{{ reply.text }}</p>
-        <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          View Attachment
-        </button>
-      </div>
+</div>
 
       <!-- Add Comment and Attachment Section -->
       <div class="max-w-3xl mx-auto mb-6 bg-white p-4 rounded-lg shadow-md">
         <h4 class="text-md font-semibold mb-2">Add Comment</h4>
         <textarea
-          v-model="newComment.text"
+          v-model="newComment"
           rows="4"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        ></textarea>s
+        ></textarea>
 
         <h4 class="text-md font-semibold mt-4 mb-2">Add Attachment</h4>
         <input
@@ -87,38 +118,37 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useTicketStore } from '../stores/ticketStore';
+import { useCommentStore } from '../stores/commentStore'; // Import the comment store
 import Navbar from '../components/Navbar.vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 
 const ticketStore = useTicketStore();
-const comments = ref<{ name: string; text: string; attachmentFile?: File | null }[]>([]);
-const replies = ref<{ text: string }[]>([]);
-const newComment = ref<{ text: string; attachmentFile?: File | null }>({ text: '', attachmentFile: null });
+const commentStore = useCommentStore(); // Use the comment store
+
 const route = useRoute();
-const router = useRouter();
 
 const ticketNumber = route.params.ticketNumber;
 const ticket = ref<any>({});
 const isReadMore = ref(false);
 
+const newComment = ref<string>('');
+const attachment = ref<File | null>(null);
+
 onMounted(async () => {
   try {
     const response = await ticketStore.fetchTicket(ticketNumber);
-
     if (response && response.data) {
-      // Populate initial ticket data
       ticket.value = {
-        id_ticket: response.data.id,
+        id_ticket: response.data.id_ticket,
         ticket_number: response.data.ticket_number,
         client_name: response.data.clientname,
         created_at: response.data.created_at,
         subject: response.data.subject,
         issue: response.data.issue,
         attachment_url: response.data.attachment_url,
-        attachment_name: response.data.attachment_name, // Ensure this data is available from the API
+        attachment_name: response.data.attachment_name,
       };
-      comments.value = response.data.comments || [];
-      replies.value = response.data.replies || [];
+      await commentStore.fetchComments(response.data.id_ticket);
     }
   } catch (error) {
     console.error('Error fetching ticket:', error);
@@ -132,25 +162,31 @@ const toggleReadMore = () => {
 const handleFileChange = (event: Event) => {
   const input = event.target as HTMLInputElement;
   if (input.files && input.files.length > 0) {
-    newComment.value.attachmentFile = input.files[0];
+ attachment.value = input.files[0];
   }
 };
 
-const addComment = () => {
-  if (newComment.value.text.trim()) {
-    const comment = {
-      name: 'Client',  // You can set the client name dynamically if needed
-      text: newComment.value.text.trim(),
-      attachmentFile: newComment.value.attachmentFile || null
-    };
-
-    // Add the new comment to the list of comments
-    comments.value.push(comment);
-
-    // Clear the form fields
-    newComment.value.text = '';
-    newComment.value.attachmentFile = null;
+const addComment = async () => {
+    try {
+      await commentStore.createComment(ticket.value.id_ticket, newComment.value, attachment.value);
+      newComment.value = '';
+      attachment.value=null
+    } catch (error) {
+      console.error('Error adding comment:', error);
   }
+};
+
+
+const isImage = (fileName:string) => {
+  const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+  const extension = fileName.split('.').pop()?.toLowerCase();
+  return imageExtensions.includes(extension || '');
+}
+const isCommentImage = (attachmentName: string | undefined) => {
+  if (!attachmentName) return false;
+  const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+  const extension = attachmentName.split('.').pop()?.toLowerCase();
+  return imageExtensions.includes(extension || '');
 };
 </script>
 

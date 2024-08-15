@@ -174,11 +174,11 @@ const totalPages = computed(() => {
 });
 
 const addKategori = () => {
-  router.push({ name: 'addkategori' });
+  router.push({ name: 'AddKategori' });
 };
 
 const editKategori = (id: number) => {
-  router.push({ name: 'editkategori', params: { id } });
+  router.push({ name: 'EditKategori', params: { id } });
 };
 
 const deleteKategori = async (id: number) => {

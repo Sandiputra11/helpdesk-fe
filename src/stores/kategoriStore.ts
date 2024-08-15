@@ -38,7 +38,6 @@ export const useKategoriStore = defineStore('kategori', () => {
   const fetchKategori = async (id :number) => {
   try {
     const response = await axios.get(`/api/auth/kategoris/${id}`);
-    console.log(response.data.data); // Log data untuk melihat strukturnya
     return response.data.data;
   } catch (error) {
     handleError(error);

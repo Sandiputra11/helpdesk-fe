@@ -52,18 +52,25 @@
   </template>
   
   <script setup lang="ts">
-  import { onMounted } from 'vue';
+  import { onMounted, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { useReportStore } from '../stores/reportStore';
   import ExcelJS from 'exceljs';
+import { useKategoriStore } from '../stores/kategoriStore';
   
   const route = useRoute();
   const router = useRouter();
   const reportStore = useReportStore();
+  const kategoriStore= useKategoriStore();
+  const selectedCategory= ref<string>('');
   
+  const { option, startDate, endDate, category } = route.query;
   onMounted(async () => {
-    const { option, startDate, endDate, category } = route.query;
     await reportStore.fetchReports(option, startDate, endDate, category);
+    const fetchKategori=await kategoriStore.fetchKategori(category);
+    if (fetchKategori) {
+      selectedCategory.value= fetchKategori.nama_kategori
+    }
   });
   
   const goBack = () => {
@@ -84,11 +91,11 @@
     ];
   
     worksheet.getRow(1).font = { bold: true };
-    worksheet.getRow(1).fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FF00B0F0' } // Biru Muda
-    };
+    // worksheet.getRow(1).fill = {
+    //   type: 'pattern',
+    //   pattern: 'solid',
+    //   fgColor: { argb: 'FF00B0F0' } // Biru Muda
+    // };
     worksheet.getRow(1).alignment = { vertical: 'middle', horizontal: 'center' };
   
     reportStore.reports.forEach((report, index) => {
@@ -102,19 +109,21 @@
         status: report.status,
       });
   
-      const row = worksheet.getRow(rowIndex);
-      row.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: 'FFE6E6E6' } // Abu-abu Muda
-      };
-    });
-  
+       worksheet.getRow(rowIndex); });
+    let fileName = 'Laporan_Tiket_';
+
+if (option === 'all') {
+  fileName += 'All.xlsx';
+} else if (option === 'date') {
+  fileName += `${startDate}_to_${endDate}.xlsx`;
+} else if (option === 'category') {
+  fileName += `${selectedCategory.value}.xlsx`;
+}
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'Laporan_Tiket.xlsx';
+    link.download = fileName;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

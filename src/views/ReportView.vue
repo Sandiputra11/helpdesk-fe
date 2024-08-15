@@ -98,7 +98,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Navbar from '../components/Navbar.vue';
 import { useKategoriStore } from '../stores/kategoriStore';
@@ -109,6 +109,10 @@ const selectedOption = ref('all');
 const startDate = ref('');
 const endDate = ref('');
 const selectedCategory = ref('');
+
+onMounted(async()=>{
+await kategoriStore.fetchActiveKategoris();
+});
 
 const goToReportResult = () => {
   router.push({
