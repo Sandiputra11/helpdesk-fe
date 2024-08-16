@@ -119,6 +119,7 @@ import Navbar from '../components/Navbar.vue';
 import { ref, computed, onMounted } from 'vue';
 import { useKategoriStore } from '../stores/kategoriStore';
 import { useRouter } from 'vue-router';
+import Swal from 'sweetalert2';
 
 const kategoriStore = useKategoriStore();
 const router = useRouter();
@@ -182,11 +183,35 @@ const editKategori = (id: number) => {
 };
 
 const deleteKategori = async (id: number) => {
-  const confirmDelete = confirm('Apakah Anda yakin ingin menghapus kategori ini?');
-  if (confirmDelete) {
-    await kategoriStore.deleteKategori(id);
+  const result = await Swal.fire({
+    title: 'Apakah Anda yakin?',
+    text: "Anda tidak akan bisa mengembalikan data ini!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Ya, hapus!',
+    cancelButtonText: 'Batal'
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await kategoriStore.deleteKategori(id);
+      Swal.fire(
+        'Terhapus!',
+        'Kategori telah dihapus.',
+        'success'
+      );
+    } catch (error) {
+      Swal.fire(
+        'Gagal!',
+        'Terjadi kesalahan saat menghapus kategori.',
+        'error'
+      );
+    }
   }
 };
+
 
 const sortTable = (key: string) => {
   if (sortKey.value === key) {

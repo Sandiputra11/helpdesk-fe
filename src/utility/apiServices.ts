@@ -1,6 +1,5 @@
 import axios from "axios";
 import  errorHandler  from "./errorHandler";
-import dayjs from "dayjs";
 
 const API = 'http://127.0.0.1:8000'
 
@@ -57,8 +56,6 @@ const apiService = {
                 params: params,
                 responseType: 'blob'
             });
-
-            const date = dayjs(new Date()).format('DD-MMM-YYYY')
         
             const fileURL = window.URL.createObjectURL(new Blob([resp.data]));
             const fileLink = document.createElement('a');

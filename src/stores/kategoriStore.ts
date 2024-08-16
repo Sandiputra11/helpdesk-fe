@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { reactive, toRefs } from 'vue';
-import axios from '../utility/axiosHelper';
-import { handleError } from '../utility/errorHandler';
+import  handleError  from '../utility/errorHandler'; 
+import { apiService } from '../utility/apiServices';
 
 // Define an interface for Kategori
 interface Kategori {
@@ -16,37 +16,38 @@ export const useKategoriStore = defineStore('kategori', () => {
   // Use reactive for state
   const state = reactive({
     kategoris: [] as Kategori[],
-    // kategori: null as Kategori | null,
   });
 
   const fetchKategoris = async () => {
     try {
-      const response = await axios.get('/api/auth/kategoris');
+      const response = await apiService.apiGet('/api/auth/kategoris'); // Use apiService.apiGet
       state.kategoris = response.data.data;
     } catch (error) {
       handleError(error);
     }
   };
+
   const fetchActiveKategoris = async () => {
     try {
-      const response = await axios.get('/api/auth/kategoris/active');
+      const response = await apiService.apiGet('/api/auth/kategoris/active'); // Use apiService.apiGet
       state.kategoris = response.data.data;
     } catch (error) {
       handleError(error);
     }
   };
-  const fetchKategori = async (id :number) => {
-  try {
-    const response = await axios.get(`/api/auth/kategoris/${id}`);
-    return response.data.data;
-  } catch (error) {
-    handleError(error);
-  }
-};
+
+  const fetchKategori = async (id: number) => {
+    try {
+      const response = await apiService.apiGet(`/api/auth/kategoris/${id}`); // Use apiService.apiGet
+      return response.data.data;
+    } catch (error) {
+      handleError(error);
+    }
+  };
 
   const createKategori = async (nama_kategori: string, status: string) => {
     try {
-      const response = await axios.post('/api/auth/kategoris', { nama_kategori, status });
+      const response = await apiService.apiPost('/api/auth/kategoris', { nama_kategori, status }); // Use apiService.apiPost
       state.kategoris.push(response.data);
     } catch (error) {
       handleError(error);
@@ -54,19 +55,18 @@ export const useKategoriStore = defineStore('kategori', () => {
   };
 
   const updateKategori = async (id: number, nama_kategori: string, status: string) => {
-  try {
-    const response = await axios.put(`/api/auth/kategoris/${id}`, { nama_kategori, status });
-    console.log('Update successful:', response.data);
-    // Bisa menambahkan logika lain seperti notifikasi sukses
-  } catch (error) {
-    handleError(error);
-  }
-};
-
+    try {
+      const response = await apiService.apiPut(`/api/auth/kategoris/${id}`, { nama_kategori, status }); // Use apiService.apiPut
+      console.log('Update successful:', response.data);
+      // Bisa menambahkan logika lain seperti notifikasi sukses
+    } catch (error) {
+      handleError(error);
+    }
+  };
 
   const deleteKategori = async (id: number) => {
     try {
-      await axios.delete(`/api/auth/kategoris/${id}`);
+      await apiService.apiDelete(`/api/auth/kategoris/${id}`, {}); // Use apiService.apiDelete
       state.kategoris = state.kategoris.filter(kategori => kategori.id !== id);
     } catch (error) {
       handleError(error);

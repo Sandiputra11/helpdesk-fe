@@ -1,9 +1,8 @@
 import { defineStore } from 'pinia';
 import { reactive, toRefs } from 'vue';
-import axios from '../utility/axiosHelper';
-import { handleError } from '../utility/errorHandler';
 import router from '../router';
-
+import  handleError  from '../utility/errorHandler'; 
+import { apiService } from '../utility/apiServices';
 // Define interfaces for the ticket data
 interface Ticket {
   id: number;
@@ -32,7 +31,7 @@ export const useTicketStore = defineStore('ticket', () => {
 
   const fetchTickets = async () => {
     try {
-      const response = await axios.get('/api/auth/tickets');
+      const response = await apiService.apiGet('/api/auth/tickets'); // Use apiService.apiGet
       state.tickets = response.data.data;
     } catch (error) {
       handleError(error);
@@ -41,7 +40,7 @@ export const useTicketStore = defineStore('ticket', () => {
 
   const fetchTicket = async (ticketNumber: string) => {
     try {
-      const response = await axios.get(`/api/auth/tickets/${ticketNumber}`);
+      const response = await apiService.apiGet(`/api/auth/tickets/${ticketNumber}`); // Use apiService.apiGet
       state.ticket = response.data.data;
       return response.data;
     } catch (error) {
@@ -59,9 +58,9 @@ export const useTicketStore = defineStore('ticket', () => {
         formData.append('attachment', attachment);
       }
 
-      const response = await axios.post('/api/auth/tickets', formData, {
+      const response = await apiService.apiPost('/api/auth/tickets', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      }); // Use apiService.apiPost
       state.tickets.push(response.data);
       router.push({ name: 'Home' });
     } catch (error) {
@@ -71,7 +70,7 @@ export const useTicketStore = defineStore('ticket', () => {
 
   const updateTicket = async (ticketNumber: string, status: string) => {
     try {
-      await axios.put(`/api/auth/tickets/${ticketNumber}`, { status });
+      await apiService.apiPut(`/api/auth/tickets/${ticketNumber}`, { status }); // Use apiService.apiPut
       await fetchTickets();
     } catch (error) {
       handleError(error);
@@ -80,7 +79,7 @@ export const useTicketStore = defineStore('ticket', () => {
 
   const deleteTicket = async (ticketNumber: string) => {
     try {
-      await axios.delete(`/api/auth/tickets/${ticketNumber}`);
+      await apiService.apiDelete(`/api/auth/tickets/${ticketNumber}`, {}); // Use apiService.apiDelete
       state.tickets = state.tickets.filter(ticket => ticket.ticket_number !== ticketNumber);
     } catch (error) {
       handleError(error);
@@ -95,9 +94,7 @@ export const useTicketStore = defineStore('ticket', () => {
         return;
       }
 
-      const response = await axios.get(`/api/auth/tickets/download/${ticketNumber}`, {
-        responseType: 'blob', // Important for handling file downloads
-      });
+      const response = await apiService.apiDownload(`/api/auth/tickets/download/${ticketNumber}`, {}, ticket.attachment); // Use apiService.apiDownload
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');

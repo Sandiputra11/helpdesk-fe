@@ -1,8 +1,7 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import axios from '../utility/axiosHelper';
+import { apiService } from '../utility/apiServices';
 
-// Define the interface for a user
 interface User {
   id: number;
   name: string;
@@ -19,7 +18,7 @@ export const useUserStore = defineStore('user', () => {
   // Fetch all users
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('/api/auth/users');
+      const response = await apiService.apiGet('/api/auth/users'); // Use apiService.apiGet
       users.value = response.data;
     } catch (error) {
       console.error('Failed to fetch users', error);
@@ -29,9 +28,9 @@ export const useUserStore = defineStore('user', () => {
   // Fetch a specific user by ID
   const fetchUserById = async (id: number) => {
     try {
-      const response = await axios.get(`/api/auth/users/${id}`);
+      const response = await apiService.apiGet(`/api/auth/users/${id}`); // Use apiService.apiGet
       user.value = response.data;
-      return response.data
+      return response.data;
     } catch (error) {
       console.error('Failed to fetch user', error);
     }
@@ -40,7 +39,7 @@ export const useUserStore = defineStore('user', () => {
   // Register (add a new user)
   const registerUser = async (newUser: { name: string; email: string; role: string; password: string }) => {
     try {
-      const response = await axios.post('/api/auth/register', newUser);
+      const response = await apiService.apiPost('/api/auth/register', newUser); // Use apiService.apiPost
       if (response.data.message === 'Registrasi Sukses') {
         await fetchUsers(); // Refresh the user list after registration
       }
@@ -54,7 +53,7 @@ export const useUserStore = defineStore('user', () => {
   // Update a user by ID
   const updateUser = async (id: number, updatedUser: { name: string; email: string; role: string; password?: string }) => {
     try {
-      const response = await axios.put(`/api/auth/users/${id}`, updatedUser);
+      const response = await apiService.apiPut(`/api/auth/users/${id}`, updatedUser); // Use apiService.apiPut
       if (response.data.message === 'User updated successfully') {
         await fetchUsers(); // Refresh the user list after update
       }
@@ -68,7 +67,7 @@ export const useUserStore = defineStore('user', () => {
   // Delete a user by ID
   const deleteUser = async (id: number) => {
     try {
-      const response = await axios.delete(`/api/auth/users/${id}`);
+      const response = await apiService.apiDelete(`/api/auth/users/${id}`, {}); // Use apiService.apiDelete
       if (response.data.message === 'USER DELETED!') {
         await fetchUsers(); // Refresh the user list after deletion
       }

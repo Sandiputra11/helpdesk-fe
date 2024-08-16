@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import axios from '../utility/axiosHelper';
+import { apiService } from '../utility/apiServices';
 
 interface Comment {
   id: number;
@@ -24,7 +24,7 @@ export const useCommentStore = defineStore('comment', () => {
     loading.value = true;
     error.value = null;
     try {
-      const response = await axios.get(`/api/auth/comment/${ticket_id}`);
+      const response = await apiService.apiGet(`/api/auth/comment/${ticket_id}`); // Use apiService.apiGet
       comments.value = response.data;
     } catch (err) {
       error.value = 'Failed to fetch comments';
@@ -42,18 +42,19 @@ export const useCommentStore = defineStore('comment', () => {
     }
 
     try {
-      const response = await axios.post('/api/auth/comment', formData, {
+      const response = await apiService.apiPost('/api/auth/comment', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      });
+      }); // Use apiService.apiPost
       comments.value.push(response.data);
       fetchComments(ticket_id);
     } catch (err) {
-        console.log(err);
+      console.log(err);
       error.value = 'Failed to create comment';
     }
   };
+
   const downloadCommentAttachment = async (id: number) => {
     try {
       const comment = comments.value.find(c => c.id === id);
@@ -61,11 +62,9 @@ export const useCommentStore = defineStore('comment', () => {
         console.error('Attachment not found for this comment');
         return;
       }
-  
-      const response = await axios.get(`/api/auth/comment/download/${id}`, {
-        responseType: 'blob', // Important for handling file downloads
-      });
-  
+
+      const response = await apiService.apiDownload(`/api/auth/comment/download/${id}`, {}, comment.attachment_name); // Use apiService.apiDownload
+
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -77,7 +76,7 @@ export const useCommentStore = defineStore('comment', () => {
       console.error('Error downloading comment attachment:', error);
     }
   };
-  
+
   return {
     downloadCommentAttachment,
     comments,

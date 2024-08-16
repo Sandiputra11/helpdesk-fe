@@ -104,6 +104,8 @@ import Navbar from '../components/Navbar.vue';
 import { ref, computed, onMounted } from 'vue';
 import { useUserStore } from '../stores/userStore';
 import { useRouter } from 'vue-router';
+import Swal from 'sweetalert2';
+
 
 const searchQuery = ref('');
 const userStore = useUserStore();
@@ -149,16 +151,33 @@ const editUser = (id: number) => {
   router.push({ name: 'EditUser', params: { id } });
 };
 
-const deleteUser = async(id: number) => {
-  const confirmDelete = confirm('Apakah Anda yakin ingin menghapus User ini?');
-if (confirmDelete) {
-  try {
-    await userStore.deleteUser(id);
-  } catch (error) {
-    console.error('Gagal Hapus',500);
+const deleteUser = async (id: number) => {
+  const result = await Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!'
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await userStore.deleteUser(id);
+      Swal.fire(
+        'Deleted!',
+        'The user has been deleted.',
+        'success'
+      );
+    } catch (error) {
+      Swal.fire(
+        'Error!',
+        'Failed to delete the user.',
+        'error'
+      );
+    }
   }
-}
-  
 };
 
 const performSearch = () => {
