@@ -44,7 +44,7 @@ const routes = [
     path: '/addticket',
     name: 'AddTicket',
     component: AddTicketView,
-    meta: { requiresAuth: true, roles: ['client','support', 'admin'] },
+    meta: { requiresAuth: true },
   },
   {
     path: '/addkategori',

@@ -136,9 +136,9 @@ const exportToPDF = () => {
   const doc = new jsPDF();
 let title = 'Laporan_Tiket_';
   if (option === 'all') {
-    title += 'All';
+    title += 'Semua';
   } else if (option === 'date') {
-    title += `${startDate}_to_${endDate}`;
+    title += `${startDate}_Sampai_${endDate}`;
   } else if (option === 'category') {
     title += `${selectedCategory.value}`;
   }
