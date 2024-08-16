@@ -48,24 +48,22 @@ const apiService = {
             errorHandler(error);
         }
     },
-    apiDownload: async (uri: string, params?: any, filename?: string, type?: string) :Promise<any> => {
+    apiDownload: async (uri: string, filename: string,) :Promise<any> => {
         try {
             const resp = await axios({
                 url: API + uri,
                 method: 'GET',
-                params: params,
                 responseType: 'blob'
             });
-        
-            const fileURL = window.URL.createObjectURL(new Blob([resp.data]));
-            const fileLink = document.createElement('a');
-            fileLink.href = fileURL;
-            fileLink.setAttribute('download', filename + '-' + date + '.' + type);
-            document.body.appendChild(fileLink);
-            fileLink.click();
-        
-            document.body.removeChild(fileLink);
-            window.URL.revokeObjectURL(fileURL);
+
+           
+      const url = window.URL.createObjectURL(new Blob([resp.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename); // Adjust the filename as needed
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
         } catch (error) {
             errorHandler(error)
         }

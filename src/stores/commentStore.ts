@@ -61,17 +61,10 @@ export const useCommentStore = defineStore('comment', () => {
       if (!comment || !comment.attachment_name) {
         console.error('Attachment not found for this comment');
         return;
+      } else {
+        await apiService.apiDownload(`/api/auth/comment/download/${id}`, comment.attachment_name); 
       }
 
-      const response = await apiService.apiDownload(`/api/auth/comment/download/${id}`, {}, comment.attachment_name); // Use apiService.apiDownload
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', comment.attachment_name); // Adjust the filename as needed
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
     } catch (error) {
       console.error('Error downloading comment attachment:', error);
     }

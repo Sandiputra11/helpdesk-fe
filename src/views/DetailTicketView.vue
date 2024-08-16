@@ -127,7 +127,7 @@ const commentStore = useCommentStore(); // Use the comment store
 
 const route = useRoute();
 
-const ticketNumber = route.params.ticketNumber;
+const ticketNumber = <string>route.params.ticketNumber;
 const ticket = ref<any>({});
 const isReadMore = ref(false);
 

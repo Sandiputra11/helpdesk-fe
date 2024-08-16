@@ -17,18 +17,12 @@
     </div>
   </template>
   
-  <script>
+  <script setup lang="ts">
   import Accordion from '../components/Accordion.vue';
   import Navbar from '../components/Navbar.vue';
   
-  export default {
-    components: {
-        Navbar,
-        Accordion
-    },
-    data() {
-  return {
-    faqs: [
+
+  const faqs= [
       {
         question: "Apa itu Sistem Ticketing?",
         answer: "Sistem Ticketing adalah sebuah platform yang digunakan untuk mengelola, melacak, dan menyelesaikan permintaan atau masalah yang diajukan oleh pengguna atau pelanggan. Setiap permintaan dibuat dalam bentuk 'ticket' yang kemudian ditangani oleh tim terkait."
@@ -61,10 +55,8 @@
         question: "Apa yang harus dilakukan jika tidak ada tanggapan pada ticket?",
         answer: "Jika ticket Anda tidak mendapat tanggapan dalam waktu yang wajar, Anda bisa menghubungi tim support langsung melalui kontak yang disediakan atau mengirim pengingat melalui sistem ticketing."
       }
-    ],
-  };
-}
-  };
+    ];
+
   </script>
   
   <style scoped>

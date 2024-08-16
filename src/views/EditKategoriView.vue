@@ -65,7 +65,7 @@ const router = useRouter();
 const nama_kategori = ref('')
 const status = ref('');
 
-const categoryId = route.params.id; // Assuming 'id' is passed as a route parameter
+const categoryId =route.params.id; // Assuming 'id' is passed as a route parameter
 onMounted(async () => {
   const existingKategori = await kategoriStore.fetchKategori(categoryId);
   

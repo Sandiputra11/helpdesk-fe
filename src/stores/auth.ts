@@ -37,7 +37,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await apiService.apiPost('/api/auth/login', credentials); // Menggunakan apiService.apiPost
       setToken(response.data.access_token);
-      await fetchUser();
+      setUser(response.data.user);
       router.push({ name: 'Home' });
     } catch (error) {
       handleError(error); // Menggunakan handleError

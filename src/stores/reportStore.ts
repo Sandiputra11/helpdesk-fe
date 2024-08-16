@@ -58,12 +58,20 @@ export const useReportStore = defineStore('report', () => {
     });
 
     let fileName = 'Laporan_Tiket_';
-    if (option === 'all') {
-      fileName += 'All.xlsx';
-    } else if (option === 'date') {
-      fileName += `${startDate}_to_${endDate}.xlsx`;
-    } else if (option === 'category') {
-      fileName += `${selectedCategory}.xlsx`;
+  
+    switch (option) {
+      case 'all':
+        fileName += 'Semua.xlsx';
+        break;
+      case 'date':
+        fileName += `${startDate}_Sampai_${endDate}.xlsx`;
+        break;
+      case 'category':
+        fileName += `${selectedCategory}.xlsx`;
+        break;
+      default:
+        fileName = 'Laporan_Ticket.xlsx';
+        break;
     }
 
     const buffer = await workbook.xlsx.writeBuffer();
@@ -79,13 +87,21 @@ export const useReportStore = defineStore('report', () => {
   const exportToPDF = (option: string, startDate?: string, endDate?: string, selectedCategory: string) => {
     const doc = new jsPDF();
     let title = 'Laporan_Tiket_';
-    if (option === 'all') {
-      title += 'Semua';
-    } else if (option === 'date') {
-      title += `${startDate}_Sampai_${endDate}`;
-    } else if (option === 'category') {
-      title += `${selectedCategory}`;
-    }
+
+switch (option) {
+  case 'all':
+    title += 'Semua';
+    break;
+  case 'date':
+    title += `${startDate}_Sampai_${endDate}`;
+    break;
+  case 'category':
+    title += `${selectedCategory}`;
+    break;
+  default:
+    title = 'Laporan_Ticket';
+    break;
+}
 
     // Add title
     doc.setFontSize(18);
