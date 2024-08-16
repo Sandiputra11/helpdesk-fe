@@ -1,8 +1,10 @@
 // src/utility/errorHandler.ts
 import Swal from 'sweetalert2';
 
-export const handleError = (error: any) => {
+const handleError = (error: any) => {
   console.error(error);
+
+  const {data, status} = error.response
 
   let message = 'Terjadi kesalahan. Silakan coba lagi.';
   let title = 'Error';
@@ -10,18 +12,18 @@ export const handleError = (error: any) => {
 
   if (error.response) {
     // Kesalahan yang datang dari respons server
-    if (error.response.status >= 500) {
+    if (status >= 500) {
       message = 'Terjadi kesalahan di server. Silakan coba lagi nanti.';
-    } else if (error.response.status === 404) {
+    } else if (status === 404) {
       message = 'Sumber daya yang Anda minta tidak ditemukan.';
-    } else if (error.response.status === 403) {
+    } else if (status === 403) {
       message = 'Anda tidak memiliki izin untuk melakukan aksi ini.';
-    } else if (error.response.status === 401) {
+    } else if (status === 401) {
       message = 'Anda harus login untuk melakukan aksi ini.';
-    } else if (error.response.data && error.response.data.message) {
-      message = error.response.data.message;
+    } else if (data && data.message) {
+      message = data.message;
     } else {
-      message = `Terjadi kesalahan: ${error.response.statusText}`;
+      message = `Terjadi kesalahan: ${statusText}`;
     }
   } else if (error.request) {
     // Kesalahan yang datang dari jaringan atau saat tidak ada respons dari server
@@ -39,3 +41,5 @@ export const handleError = (error: any) => {
     text: message,
   });
 };
+
+export default handleError
