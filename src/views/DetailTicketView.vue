@@ -34,7 +34,7 @@
     <div v-if="isImage(ticket.attachment_name)">
       <img :src="ticket.attachment_url" alt="Attachment Image" class="mt-2 max-w-full rounded-md" />
       <button
-        @click="ticketStore.downloadAttachment(ticket.ticket_number)"
+        @click="ticketStore.downloadAttachment(ticketNumber);"
         class="mt-2 inline-block px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
       >
         Download {{ ticket.attachment_name }}
@@ -146,7 +146,7 @@ onMounted(async () => {
         subject: response.data.subject,
         issue: response.data.issue,
         attachment_url: response.data.attachment_url,
-        attachment_name: response.data.attachment_name,
+        attachment_name: response.data.attachment,
       };
       await commentStore.fetchComments(response.data.id_ticket);
     }

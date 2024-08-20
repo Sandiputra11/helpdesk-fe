@@ -5,8 +5,13 @@ import { apiService } from '../utility/apiServices';
 interface User {
   id: number;
   name: string;
+  role_id:number;
   role: string;
   email: string;
+}
+interface Role {
+  id:number;
+  name:string;
 }
 
 // Define the Pinia store
@@ -14,6 +19,7 @@ export const useUserStore = defineStore('user', () => {
   // State variables
   const users = ref<User[]>([]); // Array of users
   const user = ref<User | null>(null); // Single user object or null
+  const roles = ref<Role[]>([]);
 
   // Fetch all users
   const fetchUsers = async () => {
@@ -37,7 +43,7 @@ export const useUserStore = defineStore('user', () => {
   };
 
   // Register (add a new user)
-  const registerUser = async (newUser: { name: string; email: string; role: string; password: string }) => {
+  const registerUser = async (newUser: { name: string; email: string; role_id: number; password: string }) => {
     try {
       const response = await apiService.apiPost('/api/auth/register', newUser); // Use apiService.apiPost
       if (response.data.message === 'Registrasi Sukses') {
@@ -78,11 +84,24 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
+  const fetchRole = async () => {
+    try {
+      const response = await apiService.apiGet("/api/auth/users/roles");
+      roles.value = response.data;
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+    
+  }
+
   return {
     users,
+    roles,
     user,
     fetchUsers,
     fetchUserById,
+    fetchRole,
     registerUser,
     updateUser,
     deleteUser,
