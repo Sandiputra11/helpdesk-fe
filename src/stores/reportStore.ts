@@ -10,13 +10,12 @@ export const useReportStore = defineStore('report', () => {
   const loading = ref(false);
   const error = ref(null);
 
-  const fetchReports = async (option: string, startDate?: string, endDate?: string, categoryId?: string) => {
+  const fetchReports = async ( startDate?: string, endDate?: string, categoryId?: string) => {
     loading.value = true;
     error.value = null;
 
     try {
       const response = await apiService.apiGet('/api/auth/report', {
-        option,
         start_date: startDate,
         end_date: endDate,
         category_id: categoryId,

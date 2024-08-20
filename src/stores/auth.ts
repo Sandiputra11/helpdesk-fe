@@ -83,6 +83,7 @@ export const useAuthStore = defineStore('auth', () => {
         },
       }); // Menggunakan apiService.apiPost
       setToken(response.data.access_token);
+      setUser(response.data.user);
     } catch (error) {
       handleError(error); // Menggunakan handleError
       logout();
