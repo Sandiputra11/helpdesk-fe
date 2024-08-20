@@ -23,10 +23,14 @@
   
             <div class="mb-4">
               <label class="block mb-1 font-semibold text-gray-700">Role</label>
-              <select v-model="role" required class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                <option value="admin">Admin</option>
-                <option value="support">Support</option>
-                <option value="client">Client</option>
+              <select v-model="role_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                <option
+                v-for="role in userStore.roles"
+                :key="role.id"
+                :value="role.id"
+              >
+                {{ role.name }}
+              </option>
               </select>
             </div>
   
@@ -63,17 +67,17 @@
   const name = ref('');
   const email = ref('');
   const password = ref('');  // Added password field
-  const role = ref('');
+  const role_id = ref();
   const router = useRouter();
   const route = useRoute();
   
-  const userId = route.params.id;
-  onMounted(async() => {
+  const userId: number = Number(route.params.id);
+    onMounted(async() => {
     const user = await userStore.fetchUserById(userId);
     if (user) {
       name.value = user.name;
       email.value = user.email;
-      role.value = user.role;
+      role_id.value = user.role_id;
     }
   });
   
@@ -83,7 +87,7 @@
     await userStore.updateUser(userId, {
       name: name.value,
       email: email.value,
-      role: role.value,
+      role_id: role_id.value,
       password: password.value , // Only include password if it's provided
     });
     
@@ -93,7 +97,9 @@
     console.error('Failed to update user', error);
   }
 };
-
+  onMounted(()=>{
+    userStore.fetchRole();
+  });
   const goBack = () => {
     router.push({ name: 'UserManagement' });
   };

@@ -43,7 +43,7 @@ export const useUserStore = defineStore('user', () => {
   };
 
   // Register (add a new user)
-  const registerUser = async (newUser: { name: string; email: string; role_id: number; password: string }) => {
+  const registerUser = async (newUser: { name: string; email: string; role_id: number ; password: string }) => {
     try {
       const response = await apiService.apiPost('/api/auth/register', newUser); // Use apiService.apiPost
       if (response.data.message === 'Registrasi Sukses') {
@@ -57,7 +57,7 @@ export const useUserStore = defineStore('user', () => {
   };
 
   // Update a user by ID
-  const updateUser = async (id: number, updatedUser: { name: string; email: string; role: string; password?: string }) => {
+  const updateUser = async (id: number, updatedUser: { name: string; email: string; role_id: number; password?: string }) => {
     try {
       const response = await apiService.apiPut(`/api/auth/users/${id}`, updatedUser); // Use apiService.apiPut
       if (response.data.message === 'User updated successfully') {
@@ -88,7 +88,6 @@ export const useUserStore = defineStore('user', () => {
     try {
       const response = await apiService.apiGet("/api/auth/users/roles");
       roles.value = response.data;
-      console.log(response);
     } catch (error) {
       console.error(error);
     }
