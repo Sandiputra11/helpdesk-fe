@@ -15,11 +15,9 @@
           </div>
         </div>
         <div class="text-xl"><h2><strong>Subject:</strong> {{ ticket.subject }}</h2></div>
-        <button @click="toggleReadMore" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          Show Issue
-        </button>
 
-        <div v-if="isReadMore" class="mt-4">
+        <!-- Issue Section -->
+        <div class="mt-4">
           <div>
             <h1 class="text-xl font-bold">Issue:</h1>
             <textarea
@@ -30,65 +28,61 @@
             ></textarea>
           </div>
           <div class="mt-4">
-    <p><strong>Attachment:</strong></p>
-    <div v-if="isImage(ticket.attachment_name)">
-      <img :src="ticket.attachment_url" alt="Attachment Image" class="mt-2 max-w-full rounded-md" />
-      <button
-        @click="ticketStore.downloadAttachment(ticketNumber);"
-        class="mt-2 inline-block px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
-      >
-        Download {{ ticket.attachment_name }}
-      </button>
-    </div>
-    <div v-else>
-      <a
-        :href="ticket.attachment_url"
-        download
-        class="mt-2 inline-block px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
-      >
-        Download {{ ticket.attachment_name }}
-      </a>
-    </div>
-  </div>
+            <p><strong>Attachment:</strong></p>
+            <div v-if="isImage(ticket.attachment_name)">
+              <img :src="ticket.attachment_url" alt="Attachment Image" class="mt-2 max-w-full rounded-md" />
+              <button
+                @click="ticketStore.downloadAttachment(ticketNumber);"
+                class="mt-2 inline-block px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+              >
+                Download {{ ticket.attachment_name }}
+              </button>
+            </div>
+            <div v-else>
+              <a
+                :href="ticket.attachment_url"
+                download
+                class="mt-2 inline-block px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+              >
+                Download {{ ticket.attachment_name }}
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Client Comments -->
       <div
-  v-for="(comment, index) in commentStore.comments"
-  :key="comment.id"
-  class="max-w-3xl mx-auto mb-6 bg-white p-4 rounded-lg shadow-md"
->
-  <div class="flex justify-between items-center">
-    <h3 class="text-lg font-bold mb-2">{{ comment.user_name }}</h3>
-    <p class="text-gray-500 text-sm">{{ new Date(comment.created_at).toLocaleString() }}</p>
-  </div>
-  <hr class="my-4">
-  <h4 class="text-md font-semibold mb-2">{{ comment.comment }}</h4>
-  <!-- <a v-if="comment.attachment_url" :href="comment.attachment_url" class="text-blue-500 underline">
-    {{ comment.attachment_name }}
-  </a> -->
-  <div v-if="comment.attachment_url">
-    <div v-if="isCommentImage(comment.attachment_name)">
-      <img :src="comment.attachment_url" alt="Attachment Image" class="mt-2 max-w-full rounded-md" />
-      <button
-        @click="commentStore.downloadCommentAttachment(comment.id)"
-        class="mt-2 inline-block px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+        v-for="(comment, index) in commentStore.comments"
+        :key="comment.id"
+        class="max-w-3xl mx-auto mb-6 bg-white p-4 rounded-lg shadow-md"
       >
-        Download {{ comment.attachment_name }}
-      </button>
-    </div>
-    <div v-else>
-      <button
-        @click="commentStore.downloadCommentAttachment(comment.id)"
-        class="mt-2 inline-block px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
-      >
-        Download {{ comment.attachment_name }}
-      </button>
-    </div>
-  </div>
-
-</div>
+        <div class="flex justify-between items-center">
+          <h3 class="text-lg font-bold mb-2">{{ comment.user_name }}</h3>
+          <p class="text-gray-500 text-sm">{{ new Date(comment.created_at).toLocaleString() }}</p>
+        </div>
+        <hr class="my-4">
+        <h4 class="text-md font-semibold mb-2">{{ comment.comment }}</h4>
+        <div v-if="comment.attachment_url">
+          <div v-if="isCommentImage(comment.attachment_name)">
+            <img :src="comment.attachment_url" alt="Attachment Image" class="mt-2 max-w-full rounded-md" />
+            <button
+              @click="commentStore.downloadCommentAttachment(comment.id)"
+              class="mt-2 inline-block px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+            >
+              Download {{ comment.attachment_name }}
+            </button>
+          </div>
+          <div v-else>
+            <button
+              @click="commentStore.downloadCommentAttachment(comment.id)"
+              class="mt-2 inline-block px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+            >
+              Download {{ comment.attachment_name }}
+            </button>
+          </div>
+        </div>
+      </div>
 
       <!-- Add Comment and Attachment Section -->
       <div class="max-w-3xl mx-auto mb-6 bg-white p-4 rounded-lg shadow-md">
@@ -129,7 +123,6 @@ const route = useRoute();
 
 const ticketNumber = <string>route.params.ticketNumber;
 const ticket = ref<any>({});
-const isReadMore = ref(false);
 
 const newComment = ref<string>('');
 const attachment = ref<File | null>(null);
@@ -155,14 +148,10 @@ onMounted(async () => {
   }
 });
 
-const toggleReadMore = () => {
-  isReadMore.value = !isReadMore.value;
-};
-
 const handleFileChange = (event: Event) => {
   const input = event.target as HTMLInputElement;
   if (input.files && input.files.length > 0) {
- attachment.value = input.files[0];
+    attachment.value = input.files[0];
   }
 };
 
@@ -170,24 +159,26 @@ const addComment = async () => {
     try {
       await commentStore.createComment(ticket.value.id_ticket, newComment.value, attachment.value);
       newComment.value = '';
-      attachment.value=null
+      attachment.value = null;
     } catch (error) {
       console.error('Error adding comment:', error);
   }
 };
 
-
-const isImage = (fileName:string) => {
+const isImage = (fileName: string | undefined) => {
+  if (!fileName) return false; // Check if fileName is undefined or null
   const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
   const extension = fileName.split('.').pop()?.toLowerCase();
   return imageExtensions.includes(extension || '');
-}
+};
+
 const isCommentImage = (attachmentName: string | undefined) => {
-  if (!attachmentName) return false;
+  if (!attachmentName) return false; // Check if attachmentName is undefined or null
   const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
   const extension = attachmentName.split('.').pop()?.toLowerCase();
   return imageExtensions.includes(extension || '');
 };
+
 </script>
 
 <style scoped>
